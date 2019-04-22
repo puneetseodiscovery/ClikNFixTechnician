@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".homeScreen.HomeScreenActivity"
+    android:id="@+id/ll_ac"
+    android:background="@drawable/login_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/edittextHintColor"
+        android:gravity="center"
+        android:text="@string/earning_title"
+        android:textColor="@color/whiteColor"
+        android:textSize="19sp" />
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@drawable/rectangle_rounded_corner"
+        android:backgroundTint="@color/logoColor"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/onefive_dp"
+        android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_total_earning_text"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/total_earning"
+        android:textColor="@color/blackColor"
+        android:textSize="19sp" />
+
+    <TextView
+        android:id="@+id/tv_total_earning"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="20"
+        android:textColor="@color/blackColor"
+        android:textSize="19sp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_earning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

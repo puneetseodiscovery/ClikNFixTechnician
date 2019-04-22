@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/rectangle_rounded_corner"
+            android:layout_height="match_parent">
+
+            <!--Add cardview contents-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/ll_past_jobs_view_item"
+                android:padding="@dimen/ten_dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_tech_img"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/user_img"
+                        android:layout_weight="3"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="7"
+                        android:layout_marginTop="@dimen/twofive_dp">
+
+                        <TextView
+                            android:id="@+id/tv_tech_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_name_text"
+                            android:textSize="19sp"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/blackColor"
+                            android:singleLine="true"
+                            android:layout_marginLeft="@dimen/twozero_dp"/>
+
+                        <RatingBar
+                            android:id="@+id/rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/ten_dp"
+                            android:progressTint="@color/reviewStarColor"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_rating_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/accept_reject_text"
+                    android:layout_marginTop="5dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/blackColor" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

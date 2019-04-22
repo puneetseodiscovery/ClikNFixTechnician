@@ -1,0 +1,78 @@
+<!-- TODO: Update blank fragment layout -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:text="@string/job_complete"
+        android:textColor="@color/whiteColor"
+        android:textSize="19sp"
+        android:background="@color/edittextHintColor"
+        android:gravity="center" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/fivezero_dp"
+            android:paddingBottom="@dimen/threetwo_dp">
+
+
+            <ImageView
+                android:id="@+id/iv_chat_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/twozero_dp"
+                android:src="@drawable/login_logo"
+                android:gravity="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_mobile_screen_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_chat_mobile"
+                android:layout_margin="@dimen/twozero_dp"
+                android:gravity="center"
+                android:lineSpacingExtra="2.5dp"
+                android:text="@string/job_done_text"
+                android:textColor="@color/whiteColor"
+                android:textSize="17sp" />
+
+
+
+            <TextView
+                android:id="@+id/iv_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_mobile_screen_text"
+                android:layout_marginTop="@dimen/threezero_dp"
+                android:paddingTop="@dimen/twozero_dp"
+                android:paddingBottom="@dimen/twozero_dp"
+                android:gravity="center|bottom"
+                android:layout_centerInParent="true"
+                android:onClick="onSwipeClicked"
+                android:text="@string/payment_request"
+                android:background="@color/logoColor" />
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

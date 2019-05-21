@@ -50,7 +50,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tv_get_otp_p"
@@ -70,7 +71,7 @@
                 android:numStars="5"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/twozero_dp"
-                android:progressTint="@color/logoColor"
+                android:progressTint="@color/reviewStarColor"
                 android:rating="4.5" />
 
 
@@ -81,38 +82,20 @@
 
         </LinearLayout>
 
-       <!-- <LinearLayout
-            android:layout_width="match_parent"
+
+
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:id="@+id/tv_get_otp_p"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_get_otp_text"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/twozero_dp"
-                android:text="4.5"
-                android:textColor="@color/whiteColor"
-                android:textSize="19sp" />
-
-            <RatingBar
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/twozero_dp"
-                android:background="@color/logoColor"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_ratings"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>-->
+            android:layout_below="@+id/tv_get_otp_text"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/twozero_dp"
+            android:text="4.5"
+            android:textColor="@color/whiteColor"
+            android:textSize="19sp"
+            android:visibility="gone"/>
 
 
 

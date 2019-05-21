@@ -82,6 +82,17 @@
                 </FrameLayout>
             </RelativeLayout>
 
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/twozero_dp"
+                android:progressTint="@color/reviewStarColor"
+                android:rating="4.5" />
+
+
             <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/onefive_dp"

@@ -57,10 +57,10 @@
                             android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Status"
+                            android:text="Open"
                             android:textSize="15sp"
                             android:gravity="center_vertical"
-                            android:textColor="@color/forgotPassColor"
+                            android:textColor="@color/paymentButtonColor"
                             android:singleLine="true" />
 
                     </LinearLayout>

@@ -1,55 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cliknfix.technician">
+    package="com.cliknfix.tech">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".base.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".chat.ChatActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".aboutUs.AboutUsActivity"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar"></activity>
+        <activity
+            android:name=".privacyPolicy.PrivacyPolicyActivity"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
+        <activity
+            android:name=".contact.ContactUsActivity"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
+        <!--
+Set custom default icon. This is used when no icon is set for incoming notification messages.
+See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/login_logo" />
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <service
+            android:name=".login.LoginFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".customerProfile.TrackerLocationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".chat.ChatActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".congratulations.CongratulatonsActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".payment.PaymentSuccessActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".completeJob.CompleteJobActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".ratingsReview.RatingActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".changePassword.ChangePasswordActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".homeScreen.HomeScreenActivity"
-            android:label="@string/title_activity_home_screen"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:label="@string/title_activity_home_screen"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar">
+            <intent-filter>
+                <action android:name="accept_reject" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".splash.SplashActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,14 +106,14 @@
         </activity>
         <activity
             android:name=".forgotPassword.ForgotPasswordActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".login.LoginActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
     </application>
 
 </manifest>

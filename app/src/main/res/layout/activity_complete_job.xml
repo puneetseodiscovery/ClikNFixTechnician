@@ -1,5 +1,5 @@
 <!-- TODO: Update blank fragment layout -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,7 +28,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/fivezero_dp"
+            android:layout_marginTop="@dimen/sevenzero_dp"
             android:paddingBottom="@dimen/threetwo_dp">
 
 
@@ -52,14 +52,14 @@
                 android:lineSpacingExtra="2.5dp"
                 android:text="@string/job_done_text"
                 android:textColor="@color/whiteColor"
-                android:textSize="17sp" />
+                android:textSize="20sp" />
 
 
 
             <TextView
                 android:id="@+id/iv_next"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/tv_mobile_screen_text"
                 android:layout_marginTop="@dimen/threezero_dp"
                 android:paddingTop="@dimen/twozero_dp"
@@ -75,4 +75,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

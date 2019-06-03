@@ -66,6 +66,7 @@ public class PastJobsFragment extends Fragment implements IPastJobsFragment {
     }
 
     private void init() {
+        Log.e("past init","working");
         pastJobsArrayList=new ArrayList<>();
 
         /*pastJobsArrayList.add(new BeanPastJobs("Closed","Carpentry","19-March-2019",R.drawable.login_logo));

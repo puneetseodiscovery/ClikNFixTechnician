@@ -20,6 +20,7 @@ public class PPastJobsFragment implements IPPastJobsFragment {
 
     @Override
     public void getPastJobsList(String token) {
+        Log.e("Presenter","getPastJobsList");
         imPastJobsFragment.getPastJobsList(token);
     }
 
@@ -35,7 +36,6 @@ public class PPastJobsFragment implements IPPastJobsFragment {
 
     @Override
     public void noDataPastJobsListResponse(String msgg) {
-        Log.e("noDataPastJobsResponse","Working");
         iPastJobsFragment.noDataPastJobsListResponse(msgg);
     }
 }

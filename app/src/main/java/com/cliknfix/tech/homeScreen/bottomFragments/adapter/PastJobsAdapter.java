@@ -1,9 +1,11 @@
 package com.cliknfix.tech.homeScreen.bottomFragments.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ public class PastJobsAdapter extends RecyclerView.Adapter<PastJobsAdapter.viewHo
 
     Context context;
     List<PastJobsResponseModel.Datum> list;
+    //ArrayList<BeanPastJobs> list;
 
     public PastJobsAdapter(Context context, List<PastJobsResponseModel.Datum> list) {
         this.context = context;
@@ -47,19 +50,25 @@ public class PastJobsAdapter extends RecyclerView.Adapter<PastJobsAdapter.viewHo
         holder.tvUserText.setText(list.get(position).getName());
         holder.tvDate.setText(list.get(position).getCreatedAt());
         holder.tvCategory.setText(list.get(position).getCategory());
-        /*holder.llPastJobsItam.setOnClickListener(new View.OnClickListener() {
+        holder.btnMoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "" +list.get(position).getStatus(), Toast.LENGTH_SHORT).show();
+                //loadFragment(list.get(position).getCategory());
+                Log.e("userId","" + list.get(position).getId());
+                //((HomeScreenActivity)context).fetchUserData(list.get(position).getId());
+                ((HomeScreenActivity)context).fetchPastUserData(list.get(position).getId(),
+                        list.get(position).getCategory(),
+                        list.get(position).getCreatedAt(),
+                        list.get(position).getServicePrice());
             }
-        });*/
+        });
 
-        holder.btnMoreDetails.setOnClickListener(new View.OnClickListener() {
+        /*holder.btnMoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadFragment(list.get(position).getCategory());
             }
-        });
+        });*/
     }
 
     public void loadFragment(String category) {

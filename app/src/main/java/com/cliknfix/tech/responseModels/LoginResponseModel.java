@@ -52,6 +52,9 @@ public class LoginResponseModel {
         @SerializedName("email")
         @Expose
         private String email;
+        @SerializedName("password")
+        @Expose
+        private String password;
         @SerializedName("email_verified_at")
         @Expose
         private Object emailVerifiedAt;
@@ -141,6 +144,14 @@ public class LoginResponseModel {
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         public Object getEmailVerifiedAt() {

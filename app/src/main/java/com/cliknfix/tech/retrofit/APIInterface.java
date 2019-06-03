@@ -2,17 +2,25 @@ package com.cliknfix.tech.retrofit;
 
 import com.cliknfix.tech.responseModels.AboutUsResponseModel;
 import com.cliknfix.tech.responseModels.AcceptRejectResponseModel;
+import com.cliknfix.tech.responseModels.ChangePasswordResponseModel;
+import com.cliknfix.tech.responseModels.CompleteJobResponseModel;
 import com.cliknfix.tech.responseModels.ContactUsResponseModel;
+import com.cliknfix.tech.responseModels.CustomerProfileResponseModel;
+import com.cliknfix.tech.responseModels.EarningsResponseModel;
+import com.cliknfix.tech.responseModels.ForgotPasswordResponseModel;
 import com.cliknfix.tech.responseModels.LoginResponseModel;
 import com.cliknfix.tech.responseModels.PastJobsResponseModel;
 import com.cliknfix.tech.responseModels.PrivacyPolicyResponseModel;
 import com.cliknfix.tech.responseModels.ReviewsResponseModel;
 import com.cliknfix.tech.responseModels.SaveUserProfileResponseModel;
+import com.cliknfix.tech.responseModels.SubmitOTPResponseModel;
 import com.cliknfix.tech.responseModels.UpcomingJobsResponseModel;
 import com.cliknfix.tech.responseModels.UserProfileResponseModel;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -44,6 +52,18 @@ public interface APIInterface {
     public static final int GETREVIEWS_SUCCESS= 21;
     public static final int GETREVIEWS_NO_DATA= 22;
     public static final int GETREVIEWS_FAILED= 23;
+    public static final int CUSTOMER_PROFILE_SUCCESS= 24;
+    public static final int CUSTOMER_PROFILE_FAILED= 25;
+    public static final int FILL_OTP_SUCCESS= 26;
+    public static final int FILL_OTP_FAILED= 27;
+    public static final int CHANGE_PASSWORD_SUCCESS= 28;
+    public static final int CHANGE_PASSWORD_FAILED= 29;
+    public static final int FORGOT_SUCCESS= 30;
+    public static final int FORGOT_FAILED= 31;
+    public static final int COMPLETE_JOB_SUCCESS= 32;
+    public static final int COMPLETE_JOB_FAILED= 33;
+    public static final int GET_EARNINGS_SUCCESS= 34;
+    public static final int GET_EARNINGS_FAILED= 35;
 
     @Headers({"Accept: application/json"})
     @POST("/Cliknfixx/api/technicianlogin")
@@ -100,4 +120,39 @@ public interface APIInterface {
     @Headers({"Accept: application/json"})
     @GET("/Cliknfixx/api/getReviews")
     Call<ReviewsResponseModel> getReviews(@Header("token") String token);
+
+    @Headers({"Accept: application/json"})
+    @POST("/Cliknfixx/api/showUserProfile")
+    Call<CustomerProfileResponseModel> getCustomerProfile(@Header("token") String token, @Query("user_id") int user_id);
+
+    @Headers({"Accept: application/json"})
+    @POST("/Cliknfixx/api/startJob")
+    Call<SubmitOTPResponseModel> submitOTP(@Header("token") String token, @Query("otp") String otp);
+
+    @Headers({"Accept: application/json"})
+    @POST("/Cliknfixx/api/changeTechnicianPassword")
+    Call<ChangePasswordResponseModel> changePassword(
+            @Query("current_password") String current_password,
+            @Query("your_password") String your_password,
+            @Query("confirm_password") String confirm_password,
+            @Header("token") String token);
+
+    @Headers({"Accept: application/json"})
+    @FormUrlEncoded
+    @POST("/Cliknfixx/api/forgetpasswordTechnician")
+    Call<ForgotPasswordResponseModel> forgotPass(
+            @Field("email") String email
+    );
+
+    @Headers({"Accept: application/json"})
+    @GET("/Cliknfixx/api/completeJob")
+    Call<CompleteJobResponseModel> completeJob(@Header("token") String token);
+
+    @Headers({"Accept: application/json"})
+    @GET("/Cliknfixx/api/totalEarning")
+    Call<EarningsResponseModel> getEarnings(@Header("token") String token);
+
+    //Call<ForgotPasswordResponseModel> forgotPass(String email);
+
+    //Call<ChangePasswordResponseModel> changePassword(String current_password, String your_password, String confirm_password, String token);
 }

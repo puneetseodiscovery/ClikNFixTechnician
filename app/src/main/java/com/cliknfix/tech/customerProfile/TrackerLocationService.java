@@ -32,6 +32,8 @@ import java.util.Random;
 public class TrackerLocationService extends Service {
 
     private static final String TAG = TrackerLocationService.class.getSimpleName();
+    String customerId;
+
     @Override
     public IBinder onBind(Intent intent) {return null;}
 
@@ -74,15 +76,15 @@ public class TrackerLocationService extends Service {
         String email = getString(R.string.firebase_email);
         String password = getString(R.string.firebase_password);
         FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
-            @Override
-            public void onComplete(Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "firebase auth success");
-                    requestLocationUpdates();
-                } else {
-                    Log.d(TAG, "firebase auth failed");
-                }
+            email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+        @Override
+        public void onComplete(Task<AuthResult> task) {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "firebase auth success");
+                requestLocationUpdates();
+            } else {
+                Log.d(TAG, "firebase auth failed");
+            }
             }
         });
     }
@@ -94,10 +96,10 @@ public class TrackerLocationService extends Service {
         request.setFastestInterval(5000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-        int random = new Random().nextInt(75) + 100;
-        Log.e(TAG,"random"+ random);
+        /*int random = new Random().nextInt(75) + 100;
+        Log.e(TAG,"random"+ random);*/
         //final String path = getString(R.string.firebase_path) + "/" + getString(R.string.transport_id);
-        final String path = getString(R.string.firebase_path) + "/" + random;
+        final String path = getString(R.string.firebase_path) + "/" + customerId;
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
@@ -115,5 +117,10 @@ public class TrackerLocationService extends Service {
                 }
             }, null);
         }
+    }
+
+    public int onStartCommand (Intent intent, int flags, int startId) {
+        customerId = intent.getStringExtra("customerId");
+        return START_STICKY;
     }
 }

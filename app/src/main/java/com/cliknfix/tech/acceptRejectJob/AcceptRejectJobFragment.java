@@ -47,7 +47,7 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
     Button btnReject;
 
     Context context;
-    String message,userId;
+    String message,userId,labourRate;
     IPAcceptRejectJobFragment ipAcceptRejectJobFragment;
     ProgressDialog progressDialog;
 
@@ -108,9 +108,7 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
         if(getArguments()!=null) {
             message = getArguments().getString("user_query");
             userId = getArguments().getString("user_id");
-            Log.e("message", message);
-            Log.e("user_id", userId);
-            Log.e("token", Utility.getToken());
+            labourRate = getArguments().getString("labour_rate");
         }
     }
 
@@ -146,8 +144,23 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
     @Override
     public void acceptRejectJobSuccessFromPresenter(AcceptRejectResponseModel acceptRejectResponseModel) {
         progressDialog.dismiss();
+        Log.e("Response userId",""+ acceptRejectResponseModel);
+        Log.e("to customer userId", "" + acceptRejectResponseModel.getData().get(0).getId());
         FragmentTransaction transaction = ((HomeScreenActivity) context).getSupportFragmentManager().beginTransaction();
         UpcomingCustomerProfileFragment fragment = new UpcomingCustomerProfileFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", acceptRejectResponseModel.getData().get(0).getId());
+        args.putInt("id", acceptRejectResponseModel.getData().get(0).getId());
+        args.putString("name", acceptRejectResponseModel.getData().get(0).getName());
+        args.putString("email", acceptRejectResponseModel.getData().get(0).getEmail());
+        args.putString("phone", acceptRejectResponseModel.getData().get(0).getPhone());
+        args.putString("age", acceptRejectResponseModel.getData().get(0).getAge());
+        args.putString("blood_group", acceptRejectResponseModel.getData().get(0).getBloodGroup());
+        args.putString("address", acceptRejectResponseModel.getData().get(0).getAddress());
+        args.putString("latitude", acceptRejectResponseModel.getData().get(0).getLat());
+        args.putString("longitude", acceptRejectResponseModel.getData().get(0).getLng());
+        args.putString("labour_rate", labourRate);
+        fragment.setArguments(args);
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();

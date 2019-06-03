@@ -101,11 +101,13 @@ public class UpcomingJobsFragment extends Fragment implements IUpcomingJobsFragm
     private void init() {
         BeanNotification beanNotification = ((HomeScreenActivity)context).getIntentData();
         if(beanNotification.getMessage()!=null && beanNotification.getUserId()!=null){
+            Log.e("upcoming jobs userId","" + beanNotification.getUserId());
             FragmentTransaction transaction = ((HomeScreenActivity) context).getSupportFragmentManager().beginTransaction();
             AcceptRejectJobFragment fragment = new AcceptRejectJobFragment();
             Bundle args = new Bundle();
             args.putString("user_id", beanNotification.getUserId());
             args.putString("user_query", beanNotification.getMessage());
+            args.putString("labour_rate", beanNotification.getLabourRate());
             fragment.setArguments(args);
             transaction.replace(R.id.frame_container, fragment);
             transaction.addToBackStack(null);
@@ -132,6 +134,7 @@ public class UpcomingJobsFragment extends Fragment implements IUpcomingJobsFragm
 
     @Override
     public void getUpcomingJobsListSuccessFromPresenter(UpcomingJobsResponseModel upcomingJobsResponseModel) {
+        Log.e("upcoming jobs","" + upcomingJobsResponseModel);
         progressDialog.dismiss();
         tvNoData.setVisibility(View.GONE);
         rvUpcomingJobs.setVisibility(View.VISIBLE);

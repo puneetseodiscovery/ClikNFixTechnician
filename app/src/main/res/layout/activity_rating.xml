@@ -47,57 +47,58 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <LinearLayout android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:id="@+id/ll_rating">
+
+                <TextView
+                    android:id="@+id/tv_get_otp_p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_get_otp_text"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/twozero_dp"
+                    android:text="4.5"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="19sp" />
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/twozero_dp"
+                    android:progressTint="@color/reviewStarColor"
+                    android:rating="4.5" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_ratings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_get_otp_p"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_get_otp_text"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/twozero_dp"
+                android:id="@+id/tv_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/fivezero_dp"
                 android:text="4.5"
                 android:textColor="@color/whiteColor"
-                android:textSize="19sp" />
-
-            <RatingBar
-                android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/twozero_dp"
-                android:progressTint="@color/reviewStarColor"
-                android:rating="4.5" />
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_ratings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textSize="19sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
-
-
-
-        <TextView
-            android:id="@+id/tv_no_data"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tv_get_otp_text"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/twozero_dp"
-            android:text="4.5"
-            android:textColor="@color/whiteColor"
-            android:textSize="19sp"
-            android:visibility="gone"/>
-
-
 
 
 

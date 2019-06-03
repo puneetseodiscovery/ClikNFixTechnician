@@ -24,6 +24,7 @@ import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +37,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     ImageView ivEdit;
     @BindView(R.id.iv_save)
     ImageView ivSave;
+    @BindView(R.id.cam)
+    CircleImageView CIcam;
     @BindView(R.id.ll_user_profile)
     LinearLayout llUserProfile;
     @BindView(R.id.tv_title)
@@ -149,6 +152,9 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                         Utility.getToken());
                 break;
             case R.id.iv_verfied_doc:
+                Toast.makeText(getActivity(), "Coming Soon!!!", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.cam:
                 Toast.makeText(getActivity(), "Coming Soon!!!", Toast.LENGTH_SHORT).show();
                 break;
         }

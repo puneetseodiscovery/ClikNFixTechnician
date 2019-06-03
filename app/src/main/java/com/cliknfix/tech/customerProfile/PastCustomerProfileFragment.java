@@ -114,6 +114,14 @@ public class PastCustomerProfileFragment extends Fragment {
         tvAddressText.setTypeface(Utility.typeFaceForText(getContext()));
         etAddress.setTypeface(Utility.typeFaceForText(getContext()));
 
+        //args.putInt("id", customerProfileResponseModel.getData().get(0).getId());
+        etUserName.setText(getArguments().getString("name"));
+        etEmail.setText(getArguments().getString("email"));
+        etJobDate.setText(getArguments().getString("jobDate"));
+        etJobType.setText(getArguments().getString("jobType"));
+        etPayableAmt.setText(getArguments().getString("PayableAmt"));
+        etAddress.setText(getArguments().getString("address"));
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

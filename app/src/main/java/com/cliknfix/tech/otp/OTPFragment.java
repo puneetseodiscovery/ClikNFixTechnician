@@ -1,23 +1,30 @@
 package com.cliknfix.tech.otp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.completeJob.CompleteJobActivity;
+import com.cliknfix.tech.responseModels.SubmitOTPResponseModel;
 import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class OTPFragment extends Fragment {
+public class OTPFragment extends Fragment implements IOTPFragment {
 
     public static String TAG_OTP_FRAGMENT = "OTPFragment";
 
@@ -48,6 +55,9 @@ public class OTPFragment extends Fragment {
     Button btnStartJob;
 
     Context context;
+    ProgressDialog progressDialog;
+    IPOTPFragment ipotpFragment;
+    String labourRate;
 
     public OTPFragment() {
         // Required empty public constructor
@@ -87,6 +97,7 @@ public class OTPFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_otp, container, false);
         ButterKnife.bind(this,view);
         context = getContext();
+        ipotpFragment = new POTPFragment(this);
         init();
         return view;
     }
@@ -97,12 +108,121 @@ public class OTPFragment extends Fragment {
         tvGetOTPPText.setTypeface(Utility.typeFaceForBoldText(getContext()));
         btnStartJob.setTypeface(Utility.typeFaceForBoldText(getContext()));
 
+        labourRate = getArguments().getString("labour_rate");
         btnStartJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (etOTP1.getText().toString().length()>0 && etOTP2.getText().toString().length()>0
+                && etOTP3.getText().toString().length()>0 && etOTP4.getText().toString().length()>0 ) {
+                    String otp = etOTP1.getText().toString() + etOTP2.getText().toString() +
+                            etOTP3.getText().toString() + etOTP4.getText().toString();
+                        progressDialog = Utility.showLoader(context);
+                        ipotpFragment.submitOTP(otp,Utility.getToken());
+                } else {
+                    if (etOTP1.getText().toString().length()==0 || etOTP2.getText().toString().length()==0
+                        || etOTP3.getText().toString().length()==0 || etOTP4.getText().toString().length()==0)
+                    {
+                        etOTP1.setError("Enter OTP.");
+                        etOTP1.requestFocus();
+                    }
+                }
+            }
+        });
+
+        setRequestFocus();
+    }
+
+    private void setRequestFocus() {
+        etOTP1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etOTP1.getText().toString().length()>0)
+                    etOTP2.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etOTP2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etOTP2.getText().toString().length()>0)
+                    etOTP3.requestFocus();
+
+                if(etOTP2.getText().toString().length() == 0)
+                    etOTP1.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etOTP3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etOTP3.getText().toString().length()>0)
+                    etOTP4.requestFocus();
+
+                if(etOTP3.getText().toString().length() == 0)
+                    etOTP2.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etOTP4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(etOTP4.getText().toString().length() == 0)
+                    etOTP3.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
     }
 
+    @Override
+    public void onSubmitOTPSuccessFromPresenter(SubmitOTPResponseModel submitOTPResponseModel) {
+        progressDialog.dismiss();
+        Intent intent = new Intent(context, CompleteJobActivity.class);
+        intent.putExtra("labour_rate",labourRate);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSubmitOTPFailedFromPresenter(String msgg) {
+        progressDialog.dismiss();
+        Toast.makeText(context, "" + msgg, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.base.BaseClass;
 import com.cliknfix.tech.base.MyApp;
@@ -32,11 +39,17 @@ import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.responseModels.LoginResponseModel;
 import com.cliknfix.tech.util.PreferenceHandler;
 import com.cliknfix.tech.util.Utility;
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +79,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity
     ProgressDialog progressDialog;
     IPLoginActivity ipLoginActivity;
 
+    Boolean passVisible = false;
+
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -73,6 +88,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity
     private double currentLongitude;
 
     private static final int LOCATION_PERMISSIONS_REQUEST = 1;
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +101,57 @@ public class LoginActivity extends BaseClass implements ILoginActivity
     }
 
     private void init() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (Utility.isNetworkConnected(this)) {
+            if (checkPermissions()) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                            LOCATION_PERMISSIONS_REQUEST);
+                }
+                fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        currentLatitude = location.getLatitude();
+                        currentLongitude = location.getLongitude();
+                        //Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                    }
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(this, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+        }
         etEmail.setTypeface(Utility.typeFaceForText(this));
         /*etPassword.setTypeface(Utility.typeFaceForText(this));
         tvLoginText.setTypeface(Utility.typeFaceForBoldText(this));
         btnLogin.setTypeface(Utility.typeFaceForBoldText(this));*/
+
+        ivPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!passVisible) {
+                    etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    etPassword.setSelection(etPassword.length());
+                    passVisible = true;
+                } else {
+                    etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    etPassword.setSelection(etPassword.length());
+                    passVisible = false;
+                }
+            }
+        });
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 // The next two lines tell the new client that “this” current class will handle connection stuff
@@ -120,7 +184,7 @@ public class LoginActivity extends BaseClass implements ILoginActivity
     }
 
 
-    private void checkPermissions() {
+    private boolean checkPermissions() {
         // Check location permission is granted - if it is, start the service, otherwise request the permission
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -131,10 +195,12 @@ public class LoginActivity extends BaseClass implements ILoginActivity
             startService(new Intent(this, LoginFirebaseMessagingService.class));
             deviceId = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_FIREBASE_TOKEN, "");
             Log.e("Login deviceId",deviceId);
+            return true;
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSIONS_REQUEST);
+            return false;
         }
     }
 
@@ -160,8 +226,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity
     @Override
     public void onLocationChanged(Location location) {
         Log.e("onLocationChanged","working");
-        currentLatitude = location.getLatitude();
-        currentLongitude = location.getLongitude();
+        //currentLatitude = location.getLatitude();
+        //currentLongitude = location.getLongitude();
     }
 
 
@@ -178,8 +244,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity
 
             } else {
                 //If everything went fine lets get latitude and longitude
-                currentLatitude = location.getLatitude();
-                currentLongitude = location.getLongitude();
+                //currentLatitude = location.getLatitude();
+                //currentLongitude = location.getLongitude();
                 Log.e("Lat","" + currentLatitude);
                 Log.e("Lon","" + currentLongitude);
                 Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
@@ -236,6 +302,37 @@ public class LoginActivity extends BaseClass implements ILoginActivity
 
     public void onLoginClicked(View view) {
         if (Utility.isNetworkConnected(this)) {
+            if (Utility.isNetworkConnected(this)) {
+                if (checkPermissions()) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                                LOCATION_PERMISSIONS_REQUEST);
+                    }
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        // Logic to handle location object
+                                        currentLatitude = location.getLatitude();
+                                        currentLongitude = location.getLongitude();
+                                        Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            } else {
+                Toast.makeText(this, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+            }
            if(deviceId!=null) {
                 if (etEmail.getText().toString().length()>0 && etPassword.getText().toString().length()>0 ) {
                     if (Utility.validEmail(etEmail.getText().toString().trim())) {
@@ -282,13 +379,113 @@ public class LoginActivity extends BaseClass implements ILoginActivity
 
     @Override
     public void onLoginSuccessFromPresenter(LoginResponseModel userModelLoginResponse) {
+        String userId = userModelLoginResponse.getData().get(0).getId().toString().trim();
+        String password = userModelLoginResponse.getData().get(0).getPassword().toString().trim();
+        registerUserToFirebase(userId,password);
+        loginUsertoFirebase(userId,password);
         progressDialog.dismiss();
         startActivity(new Intent(this, HomeScreenActivity.class));
+    }
+
+    private void loginUsertoFirebase(final String userId, final String password) {
+        String url = "https://cliknfix-1558498832364.firebaseio.com/users.json";
+        /*final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+        pd.setMessage("Loading...");
+        pd.show();*/
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String s) {
+                if(s.equals("null")){
+                    Toast.makeText(LoginActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    try {
+                        JSONObject obj = new JSONObject(s);
+
+                        if(!obj.has(userId)){
+                            Log.e("firebase","user not found");
+                            //Toast.makeText(LoginActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                        }
+                        else if(obj.getJSONObject(userId).getString("password").equals(password)){
+                            firebaseUsername = userId;
+                            firebasePassword = password;
+                            //startActivity(new Intent(LoginActivity.this, Users.class));
+                        }
+                        else {
+                            Log.e("firebase","incorrect password");
+                            //Toast.makeText(LoginActivity.this, "incorrect password", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //pd.dismiss();
+            }
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+                //pd.dismiss();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(LoginActivity.this);
+        rQueue.add(request);
     }
 
     @Override
     public void onLoginFailedFromPresenter(String message) {
         progressDialog.dismiss();
         Toast.makeText(this, "" + message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void registerUserToFirebase(final String userId, final String password) {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Loading...");
+        pd.show();
+
+        String url = "https://cliknfix-1558498832364.firebaseio.com/users.json";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String s) {
+                Firebase reference = new Firebase("https://cliknfix-1558498832364.firebaseio.com/users");
+
+                if(s.equals("null")) {
+                    reference.child(userId).child("password").setValue(password);
+                    Log.e("firebase","registration successful");
+                    //Toast.makeText(LoginActivity.this, "registration successful", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        JSONObject obj = new JSONObject(s);
+
+                        if (!obj.has(userId)) {
+                            reference.child(userId).child("password").setValue(password);
+                            Toast.makeText(LoginActivity.this, "registration successful", Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.e("firebase","username already exists");
+                            //Toast.makeText(LoginActivity.this, "username already exists", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                pd.dismiss();
+            }
+
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError );
+                pd.dismiss();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(LoginActivity.this);
+        rQueue.add(request);
     }
 }

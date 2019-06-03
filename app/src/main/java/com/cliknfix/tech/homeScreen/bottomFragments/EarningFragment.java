@@ -1,5 +1,6 @@
 package com.cliknfix.tech.homeScreen.bottomFragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,11 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.homeScreen.bottomFragments.adapter.EarningAdapter;
 import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanEarnings;
+import com.cliknfix.tech.homeScreen.bottomFragments.presenter.IPEarningFragment;
+import com.cliknfix.tech.homeScreen.bottomFragments.presenter.PEarningFragment;
+import com.cliknfix.tech.responseModels.EarningsResponseModel;
 import com.cliknfix.tech.util.Utility;
 
 import java.util.ArrayList;
@@ -21,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class EarningFragment extends Fragment {
+public class EarningFragment extends Fragment implements IEarningFragment {
 
     public static String TAG_EARNING_FRAGMENT = "EarningFragment";
 
@@ -43,6 +49,14 @@ public class EarningFragment extends Fragment {
     @BindView(R.id.rv_earning)
     RecyclerView rvEarning;
     ArrayList<BeanEarnings> earningArrayList ;
+
+    IPEarningFragment ipEarningFragment;
+    ProgressDialog progressDialog;
+
+    @BindView(R.id.ll_earning)
+    LinearLayout llEarning;
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
 
     Context context;
 
@@ -84,6 +98,7 @@ public class EarningFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_earning, container, false);
         ButterKnife.bind(this, view);
         context = getContext();
+        ipEarningFragment = new PEarningFragment(this);
         init();
         return view;
     }
@@ -95,17 +110,41 @@ public class EarningFragment extends Fragment {
 
         earningArrayList=new ArrayList<>();
 
-        earningArrayList.add(new BeanEarnings("Closed","Carpentry","19-March-2019","$20",R.drawable.login_logo));
+        /*earningArrayList.add(new BeanEarnings("Closed","Carpentry","19-March-2019","$20",R.drawable.login_logo));
         earningArrayList.add(new BeanEarnings("Open","Carpentry","19-March-2019","$30",R.drawable.login_logo));
         earningArrayList.add(new BeanEarnings("Pending","Carpentry","19-March-2019","$20",R.drawable.login_logo));
         earningArrayList.add(new BeanEarnings("Hold","Carpentry","19-March-2019","$10",R.drawable.login_logo));
-        earningArrayList.add(new BeanEarnings("Active","Carpentry","19-March-2019","$20",R.drawable.login_logo));
+        earningArrayList.add(new BeanEarnings("Active","Carpentry","19-March-2019","$20",R.drawable.login_logo));*/
 
+        getEarnings();
+
+    }
+
+    private void getEarnings() {
+        progressDialog = Utility.showLoader(getContext());
+        ipEarningFragment.getEarnings(Utility.getToken());
+
+    }
+
+    @Override
+    public void getEarningsSuccessFromPresenter(EarningsResponseModel earningsResponseModel) {
+        progressDialog.dismiss();
+        tvNoData.setVisibility(View.GONE);
+        llEarning.setVisibility(View.VISIBLE);
+        /*rvPastJobs.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        PastJobsAdapter adapter = new PastJobsAdapter(context, pastJobsResponseModel.getData());
+        rvPastJobs.setNestedScrollingEnabled(false);
+        rvPastJobs.setAdapter(adapter);*/
 
         rvEarning.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL, false));
-        EarningAdapter adapter = new EarningAdapter(context, earningArrayList);
+        EarningAdapter adapter = new EarningAdapter(context, earningsResponseModel.getData());
         rvEarning.setNestedScrollingEnabled(false);
         rvEarning.setAdapter(adapter);
+    }
 
+    @Override
+    public void getEarningsFailureFromPresenter(String message) {
+        progressDialog.dismiss();
+        Toast.makeText(context, ""+ message, Toast.LENGTH_SHORT).show();
     }
 }

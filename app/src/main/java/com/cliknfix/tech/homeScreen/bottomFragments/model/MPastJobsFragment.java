@@ -19,6 +19,7 @@ public class MPastJobsFragment implements IMPastJobsFragment {
 
     @Override
     public void getPastJobsList(String token) {
+        Log.e("Model","getPastJobsList");
         RetrofitCalls retrofitCalls = new RetrofitCalls();
         retrofitCalls.getPastJobsList(token,mHandler);
     }

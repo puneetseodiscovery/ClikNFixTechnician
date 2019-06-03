@@ -11,7 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.base.BaseClass;
 import com.cliknfix.tech.chat.ChatActivity;
 import com.cliknfix.tech.customerProfile.presenter.IPUpcomingCustomerProfileFragment;
 import com.cliknfix.tech.customerProfile.presenter.PUpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
+import com.cliknfix.tech.otp.OTPFragment;
+import com.cliknfix.tech.util.AppConstants;
 import com.cliknfix.tech.util.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,6 +98,9 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
     Context context;
     IPUpcomingCustomerProfileFragment ipUpcomingCustomerProfileFragment;
     ProgressDialog progressDialog;
+    int totalUsers = 0;
+    ArrayList<String> al = new ArrayList<>();
+    String lat,lng,labourRate;
 
     public UpcomingCustomerProfileFragment() {
         // Required empty public constructor
@@ -116,14 +136,31 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         btnTrack.setTypeface(Utility.typeFaceForBoldText(getContext()));
         btnStartJob.setTypeface(Utility.typeFaceForBoldText(getContext()));
 
+        Log.e("customer userId","" + getArguments().getInt("id"));
+        Log.e("customer userId name","" + getArguments().getString("name"));
+        etUserName.setText(getArguments().getString("name"));
+        etEmail.setText(getArguments().getString("email"));
+        etPhone.setText(getArguments().getString("phone"));
+        etAge.setText(getArguments().getString("age"));
+        etBldGrp.setText(getArguments().getString("blood_group"));
+        etAddress.setText(getArguments().getString("address"));
+        lat = getArguments().getString("latitude");
+        lng = getArguments().getString("longitude");
+        labourRate = getArguments().getString("labour_rate");
+
         ivBack.setOnClickListener(this);
         ivMsg.setOnClickListener(this);
         ivPhone.setOnClickListener(this);
         btnTrack.setOnClickListener(this);
         btnStartJob.setOnClickListener(this);
 
-        progressDialog = Utility.showLoader(getContext());
-        ipUpcomingCustomerProfileFragment.getUserProfile(Utility.getUserId(),Utility.getToken());
+        if(Utility.isNetworkConnected(context))
+            enableGPS();
+        else
+            Toast.makeText(context, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+
+        /*progressDialog = Utility.showLoader(getContext());
+        ipUpcomingCustomerProfileFragment.getUserProfile(Utility.getUserId(),Utility.getToken());*/
     }
 
     @Override
@@ -131,12 +168,35 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         int id = v.getId();
         switch (id) {
             case R.id.iv_msg:
-                startActivity(new Intent((HomeScreenActivity)context, ChatActivity.class));
+                String url = "https://cliknfix-1558498832364.firebaseio.com/users.json";
+
+                StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String s) {
+                        Log.e("chat response","" + s);
+                        doOnSuccess(s);
+                        BaseClass.firebaseChatWith = String.valueOf(getArguments().getInt("id"));//String.valueOf(getArguments().getInt("id"));
+                        startActivity(new Intent(context, ChatActivity.class));
+                    }
+                },new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        System.out.println("" + volleyError);
+                    }
+                });
+
+                RequestQueue rQueue = Volley.newRequestQueue(context);
+                rQueue.add(request);
+
+
+
+                //startActivity(new Intent((HomeScreenActivity)context, ChatActivity.class));
                 break;
             case R.id.iv_phone:
                 break;
             case R.id.btn_track:
-                Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
+                //Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
+                Uri gmmIntentUri = Uri.parse("geo:" + lat + "," + lng);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -144,15 +204,41 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
                 }
                 break;
             case R.id.btn_start_job:
-                if(Utility.isNetworkConnected(context))
-                    enableGPS();
-                else
-                    Toast.makeText(context, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+                Bundle args = new Bundle();
+                args.putString("labour_rate", labourRate);
+                FragmentTransaction transaction = ((HomeScreenActivity)context).getSupportFragmentManager().beginTransaction();
+                OTPFragment fragment = new OTPFragment();
+                transaction.replace(R.id.frame_container, fragment);
+                fragment.setArguments(args);
+                transaction.addToBackStack(null);
+                transaction.commit();
                 //startActivity(new Intent((HomeScreenActivity)context, CompleteJobActivity.class));
                 break;
             case R.id.iv_back:
                 ((HomeScreenActivity) getActivity()).getSupportFragmentManager().popBackStack();
                 break;
+        }
+    }
+
+    public void doOnSuccess(String s){
+        try {
+            JSONObject obj = new JSONObject(s);
+
+            Iterator i = obj.keys();
+            String key = "";
+
+            while(i.hasNext()){
+                key = i.next().toString();
+
+                if(!key.equals(BaseClass.firebaseUsername)) {
+                    al.add(key);
+                }
+
+                totalUsers++;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -180,8 +266,17 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
     }
 
     private void startTrackerService() {
-        context.startService(new Intent(context, TrackerLocationService.class));
+        //context.startService(new Intent(context, TrackerLocationService.class));
         //finish();
+        /*Intent serviceIntent = new Intent(TrackerLocationService.class.getName());
+        serviceIntent.putExtra("customerId",String.valueOf(getArguments().getInt("id")));
+        context.startService(serviceIntent);*/
+        String id = String.valueOf(getArguments().getInt("id"));
+        Log.e("starting service userId","" + id);
+        Intent intent = new Intent(context,
+                TrackerLocationService.class);
+        intent.putExtra("customerId", id);
+        context.startService(intent);
     }
 
     @Override
@@ -190,7 +285,9 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         if (requestCode == LOCATION_PERMISSIONS_REQUEST && grantResults.length == 1
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Start the service when the permission is granted
-            startTrackerService();
+            Intent serviceIntent = new Intent(TrackerLocationService.class.getName());
+            serviceIntent.putExtra("customerId", String.valueOf(getArguments().getInt("id")));
+            context.startService(serviceIntent);
         }
     }
 }

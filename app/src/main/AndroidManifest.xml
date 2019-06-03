@@ -15,8 +15,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".aboutUs.AboutUsActivity"
-            android:theme="@style/AppTheme.StatusBarWithNoActionbar"></activity>
+        <receiver
+            android:name=".base.NotificationDismissedReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
+        <service
+            android:name=".base.BaseFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".aboutUs.AboutUsActivity"
+            android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
         <activity
             android:name=".privacyPolicy.PrivacyPolicyActivity"
             android:theme="@style/AppTheme.StatusBarWithNoActionbar" />
@@ -37,8 +52,8 @@ See README(https://goo.gl/l4GJaQ) for more.
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
-        <service
+        <!--
+<service
             android:name=".login.LoginFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
@@ -46,6 +61,7 @@ See README(https://goo.gl/l4GJaQ) for more.
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        -->
         <service
             android:name=".customerProfile.TrackerLocationService"
             android:enabled="true"

@@ -28,6 +28,7 @@ public class PaymentSuccessActivity extends BaseClass {
     TextView tvMoney;
     @BindView(R.id.btn_continue)
     Button btnContinue;
+    String labourRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,9 @@ public class PaymentSuccessActivity extends BaseClass {
         tvTransactionDetailsText.setTypeface(Utility.typeFaceForText(this));
         tvMoney.setTypeface(Utility.typeFaceForBoldText(this));
         btnContinue.setTypeface(Utility.typeFaceForBoldText(this));
+
+        labourRate=getIntent().getStringExtra("labour_rate");
+        tvMoney.setText(labourRate);
     }
 
 

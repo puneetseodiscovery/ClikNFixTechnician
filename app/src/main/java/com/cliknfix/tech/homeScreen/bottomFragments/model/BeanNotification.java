@@ -1,7 +1,10 @@
 package com.cliknfix.tech.homeScreen.bottomFragments.model;
 
 public class BeanNotification {
-    String message,userId;
+    String message;
+    String userId;
+
+    String labourRate;
 
     public String getMessage() {
         return message;
@@ -17,5 +20,13 @@ public class BeanNotification {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getLabourRate() {
+        return labourRate;
+    }
+
+    public void setLabourRate(String labourRate) {
+        this.labourRate = labourRate;
     }
 }

@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "project_number": "454317025094",
+    "firebase_url": "https://cliknfix-1558498832364.firebaseio.com",
+    "project_id": "cliknfix-1558498832364",
+    "storage_bucket": "cliknfix-1558498832364.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454317025094:android:51fec0a8ab6875be",
+        "android_client_info": {
+          "package_name": "com.cliknfix.tech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454317025094-oa9u3uql9uoajhs6a3n1gb0jt5q700em.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cliknfix.tech",
+            "certificate_hash": "60154913a68a27faee8f2051bfecbe4e0dc35f2d"
+          }
+        },
+        {
+          "client_id": "454317025094-4pv32hf07ra1clcekueouht298n2tgvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOe0-kXvhM6TddNUCgYiApKrV1PNhKWM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454317025094-4pv32hf07ra1clcekueouht298n2tgvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454317025094:android:723a82229c551ef3",
+        "android_client_info": {
+          "package_name": "com.cliknfix.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454317025094-v58n6d9udgvehdn54382mpqf6pdbelf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cliknfix.user",
+            "certificate_hash": "92789cc06a648cbc31487a8ce6b8c66f7d895ebe"
+          }
+        },
+        {
+          "client_id": "454317025094-9bi644kd8djau5a1o2ft4uf48eidi28m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cliknfix.user",
+            "certificate_hash": "60154913a68a27faee8f2051bfecbe4e0dc35f2d"
+          }
+        },
+        {
+          "client_id": "454317025094-4pv32hf07ra1clcekueouht298n2tgvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOe0-kXvhM6TddNUCgYiApKrV1PNhKWM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454317025094-4pv32hf07ra1clcekueouht298n2tgvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

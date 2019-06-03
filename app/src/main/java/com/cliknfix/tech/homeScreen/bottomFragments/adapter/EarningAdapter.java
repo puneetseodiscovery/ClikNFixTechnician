@@ -14,9 +14,11 @@ import com.cliknfix.tech.R;
 import com.cliknfix.tech.customerProfile.PastCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanEarnings;
+import com.cliknfix.tech.responseModels.EarningsResponseModel;
 import com.cliknfix.tech.util.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,9 +26,10 @@ import butterknife.ButterKnife;
 public class EarningAdapter extends RecyclerView.Adapter<EarningAdapter.viewHolder> {
 
     Context context;
-    ArrayList<BeanEarnings> list = new ArrayList<>();
+    //ArrayList<BeanEarnings> list = new ArrayList<>();
+    List<EarningsResponseModel.Datum> list;
 
-    public EarningAdapter(Context context, ArrayList<BeanEarnings> list) {
+    public EarningAdapter(Context context, List<EarningsResponseModel.Datum> list) {
         this.context = context;
         this.list = list;
     }
@@ -41,18 +44,17 @@ public class EarningAdapter extends RecyclerView.Adapter<EarningAdapter.viewHold
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
         //holder.ivUserImg.setImageResource(list.get(position).getUserImg());
-        holder.tvStatus.setText(list.get(position).getStatus());
-        holder.tvDate.setText(list.get(position).getDate());
+        holder.tvUserText.setText(list.get(position).getName());
+        holder.tvDate.setText(list.get(position).getCreatedAt());
         holder.tvCategory.setText(list.get(position).getCategory());
-        holder.tvEarning.setText(list.get(position).getEarning());
+        holder.tvEarning.setText(list.get(position).getTotalEarning());
         holder.llEarningItam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = ((HomeScreenActivity) context).getSupportFragmentManager().beginTransaction();
-                PastCustomerProfileFragment fragment = new PastCustomerProfileFragment();
-                transaction.replace(R.id.frame_container, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                ((HomeScreenActivity)context).fetchPastUserData(list.get(position).getId(),
+                        list.get(position).getCategory(),
+                        list.get(position).getCreatedAt(),
+                        list.get(position).getTotalEarning());
             }
         });
     }

@@ -55,6 +55,9 @@ public class PastJobsResponseModel {
         @SerializedName("category")
         @Expose
         private String category;
+        @SerializedName("service_price")
+        @Expose
+        private String servicePrice;
 
         public Integer getId() {
             return id;
@@ -88,6 +91,12 @@ public class PastJobsResponseModel {
             this.category = category;
         }
 
-    }
+        public String getServicePrice() {
+            return servicePrice;
+        }
 
+        public void setServicePrice(String servicePrice) {
+            this.servicePrice = servicePrice;
+        }
+    }
 }

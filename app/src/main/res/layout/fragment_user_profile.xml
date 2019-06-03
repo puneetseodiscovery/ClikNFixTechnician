@@ -79,6 +79,15 @@
                         android:src="@mipmap/user_img"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFFFFF"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/cam"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="@dimen/twozero_dp"
+                        android:src="@drawable/cam"
+                        android:visibility="visible"/>
                 </FrameLayout>
             </RelativeLayout>
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ public class RatingActivity extends BaseClass implements IRatingActivity {
     RecyclerView rvRating;
     @BindView(R.id.tv_no_data)
     TextView tvNoData;
+    @BindView(R.id.ll_rating)
+    LinearLayout llRating;
     ArrayList<BeanRating> ratingArrayList;
 
     IPRatingActivity ipRatingActivity;
@@ -79,7 +82,7 @@ public class RatingActivity extends BaseClass implements IRatingActivity {
     public void getReviewsSuccessResponseFromPresenter(ReviewsResponseModel reviewsResponseModel) {
         progressDialog.dismiss();
         tvNoData.setVisibility(View.GONE);
-        rvRating.setVisibility(View.VISIBLE);
+        llRating.setVisibility(View.VISIBLE);
         rvRating.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
         RatingAdapter adapter = new RatingAdapter(this,reviewsResponseModel.getData());
         rvRating.setNestedScrollingEnabled(false);
@@ -97,6 +100,6 @@ public class RatingActivity extends BaseClass implements IRatingActivity {
         progressDialog.dismiss();
         tvNoData.setText(msgg);
         tvNoData.setVisibility(View.VISIBLE);
-        rvRating.setVisibility(View.GONE);
+        llRating.setVisibility(View.GONE);
     }
 }

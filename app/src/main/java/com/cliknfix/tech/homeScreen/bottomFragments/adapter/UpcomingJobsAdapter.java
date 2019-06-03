@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.acceptRejectJob.AcceptRejectJobFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
+import com.cliknfix.tech.homeScreen.bottomFragments.UpcomingJobsFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanUpcomingJobs;
 import com.cliknfix.tech.responseModels.UpcomingJobsResponseModel;
 import com.cliknfix.tech.util.Utility;
@@ -28,7 +30,9 @@ import butterknife.ButterKnife;
 public class UpcomingJobsAdapter extends RecyclerView.Adapter<UpcomingJobsAdapter.viewHolder> {
 
     Context context;
-    List<UpcomingJobsResponseModel.Datum> list ;
+    List<UpcomingJobsResponseModel.Datum> list;
+
+
 
     public UpcomingJobsAdapter(Context context, List<UpcomingJobsResponseModel.Datum> list) {
         this.context = context;
@@ -59,7 +63,9 @@ public class UpcomingJobsAdapter extends RecyclerView.Adapter<UpcomingJobsAdapte
         holder.btnMoreDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(list.get(position).getCategory());
+                //loadFragment(list.get(position).getCategory());
+                Log.e("userId","" + list.get(position).getId());
+                ((HomeScreenActivity)context).fetchUserData(list.get(position).getId());
             }
         });
     }

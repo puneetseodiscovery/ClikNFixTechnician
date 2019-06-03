@@ -34,7 +34,6 @@
                         android:id="@+id/iv_user_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:src="@mipmap/user_img"/>
 
                     <LinearLayout

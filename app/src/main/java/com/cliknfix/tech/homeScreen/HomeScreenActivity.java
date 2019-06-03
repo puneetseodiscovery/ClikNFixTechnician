@@ -1,6 +1,8 @@
 package com.cliknfix.tech.homeScreen;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,22 +15,31 @@ import android.widget.Toast;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.acceptRejectJob.AcceptRejectJobFragment;
 import com.cliknfix.tech.base.BaseClass;
+import com.cliknfix.tech.customerProfile.PastCustomerProfileFragment;
+import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.EarningFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.HomeFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.SettingsFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.UserProfileFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanNotification;
+import com.cliknfix.tech.responseModels.CustomerProfileResponseModel;
 import com.cliknfix.tech.util.AppConstants;
+import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeScreenActivity extends BaseClass {
+public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity {
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
     int defaultTab=0;
-    String message,technicianId,userId;
+    String message,technicianId,userId,labourRate;
+    boolean doubleBackToExitPressedOnce = false;
+    ProgressDialog progressDialog;
+    IPHomeScreenActivity ipHomeScreenActivity;
+    boolean isUpcomingCustomer;
+    String category,createdAt,servicePrice;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,6 +70,7 @@ public class HomeScreenActivity extends BaseClass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         ButterKnife.bind(this);
+        ipHomeScreenActivity = new PHomeScreenActivity(this);
         defaultTab = getIntent().getIntExtra("DefaultTab",0);
         init();
         if(defaultTab == 1 || AppConstants.USER_PROFILE_FROM_SETTINGS) {
@@ -71,6 +83,7 @@ public class HomeScreenActivity extends BaseClass {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         loadFragment(new HomeFragment());
+        firebaseUsername = String.valueOf(Utility.getUserId());
         if(getIntent().getExtras()!=null) {
             Log.e("intent data","" + getIntent().getStringExtra("message"));
             Log.e("intent data","" + getIntent().getStringExtra("technician_id"));
@@ -78,13 +91,17 @@ public class HomeScreenActivity extends BaseClass {
             message = getIntent().getStringExtra("message");
             technicianId = getIntent().getStringExtra("technician_id");
             userId = getIntent().getStringExtra("user_id");
+            labourRate = getIntent().getStringExtra("labour_rate");
+            Log.e("Homescreen userId","" + userId);
         }
     }
 
     public BeanNotification getIntentData() {
+        Log.e("Homescreen1 userId","" + userId);
         BeanNotification beanNotification = new BeanNotification();
         beanNotification.setMessage(message);
         beanNotification.setUserId(userId);
+        beanNotification.setLabourRate(labourRate);
         return beanNotification;
     }
 
@@ -104,5 +121,89 @@ public class HomeScreenActivity extends BaseClass {
             FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
             manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount == 0) {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, getResources().getString(R.string.exit), Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
+
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void fetchUserData(int userId){
+        Log.e("user data","" + userId);
+        progressDialog = Utility.showLoader(this);
+        ipHomeScreenActivity.getCustomerProfile(userId,Utility.getToken());
+        isUpcomingCustomer = true;
+    }
+
+    @Override
+    public void getCustomerProfileSuccessFromPresenter(CustomerProfileResponseModel customerProfileResponseModel) {
+        progressDialog.dismiss();
+        Log.e("userId","" + customerProfileResponseModel.getData().get(0).getId());
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(isUpcomingCustomer) {
+            UpcomingCustomerProfileFragment fragment = new UpcomingCustomerProfileFragment();
+            Bundle args = new Bundle();
+            args.putInt("id", customerProfileResponseModel.getData().get(0).getId());
+            args.putString("name", customerProfileResponseModel.getData().get(0).getName());
+            args.putString("email", customerProfileResponseModel.getData().get(0).getEmail());
+            args.putString("phone", customerProfileResponseModel.getData().get(0).getPhone());
+            args.putString("age", customerProfileResponseModel.getData().get(0).getAge());
+            args.putString("blood_group", customerProfileResponseModel.getData().get(0).getBloodGroup());
+            args.putString("address", customerProfileResponseModel.getData().get(0).getAddress());
+            fragment.setArguments(args);
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else {
+            PastCustomerProfileFragment fragment = new PastCustomerProfileFragment();
+            Bundle args = new Bundle();
+            args.putInt("id", customerProfileResponseModel.getData().get(0).getId());
+            args.putString("name", customerProfileResponseModel.getData().get(0).getName());
+            args.putString("email", customerProfileResponseModel.getData().get(0).getEmail());
+            args.putString("jobDate", createdAt);
+            args.putString("jobType", category);
+            args.putString("PayableAmt", servicePrice);
+            args.putString("address", customerProfileResponseModel.getData().get(0).getAddress());
+            fragment.setArguments(args);
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+    }
+
+    @Override
+    public void getCustomerProfileFailureFromPresenter(String message) {
+        progressDialog.dismiss();
+        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void fetchPastUserData(int userId, String category, String createdAt, String servicePrice) {
+        progressDialog = Utility.showLoader(this);
+        ipHomeScreenActivity.getCustomerProfile(userId,Utility.getToken());
+        isUpcomingCustomer = false;
+        this.category = category;
+        this.createdAt = createdAt;
+        this.servicePrice = servicePrice;
     }
 }

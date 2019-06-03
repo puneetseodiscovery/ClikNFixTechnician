@@ -2,6 +2,7 @@ package com.cliknfix.tech.homeScreen.bottomFragments;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -57,6 +58,9 @@ public class HomeFragment extends Fragment {
         tvTitle.setTypeface(Utility.typeFaceForBoldText(getContext()));
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+        setCustomFont();
+
+        tabLayout.getTabAt(0).select();
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -77,11 +81,30 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-
         HomeAdapter homeAdapter = new HomeAdapter(getActivity().getSupportFragmentManager());
         homeAdapter.addFragment(new UpcomingJobsFragment(), "UPCOMING");
         homeAdapter.addFragment(new PastJobsFragment(), "PAST");
         viewPager.setAdapter(homeAdapter);
+    }
+
+    public void setCustomFont() {
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+
+            int tabChildsCount = vgTab.getChildCount();
+
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    //Put your font in assests folder
+                    //assign name of the font here (Must be case sensitive)
+                    ((TextView) tabViewChild).setTypeface(Utility.typeFaceForText(context));
+                }
+            }
+        }
     }
 
 }

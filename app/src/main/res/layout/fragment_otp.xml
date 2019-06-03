@@ -116,7 +116,8 @@
                     android:id="@+id/et_otp1"
                     android:textColor="@color/blackColor"
                     android:background="@android:color/transparent"
-                    android:textSize="19sp" />
+                    android:textSize="19sp"
+                    android:imeOptions="actionNext"/>
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -132,7 +133,8 @@
                     android:paddingLeft="@dimen/ten_dp"
                     android:textColor="@color/blackColor"
                     android:background="@android:color/transparent"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:imeOptions="actionNext"/>
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -148,7 +150,8 @@
                     android:ellipsize="start"
                     android:textColor="@color/blackColor"
                     android:background="@android:color/transparent"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:imeOptions="actionNext"/>
 
                 <EditText
                     android:layout_width="wrap_content"
@@ -164,7 +167,8 @@
                     android:maxLength="1"
                     android:textColor="@color/blackColor"
                     android:background="@android:color/transparent"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:imeOptions="actionDone"/>
             </LinearLayout>
 
             <Button
@@ -182,6 +186,7 @@
                 android:layout_marginStart="@dimen/threetwo_dp"
                 android:layout_marginRight="@dimen/threetwo_dp"
                 android:layout_marginEnd="@dimen/threetwo_dp"
+                android:layout_marginBottom="@dimen/onetwozero_dp"
                 android:background="@drawable/background_white"
                 android:backgroundTint="@color/logoColor" />
 

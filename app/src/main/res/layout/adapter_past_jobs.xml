@@ -22,24 +22,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="10"
                 android:id="@+id/ll_past_jobs_view_item"
                 android:padding="@dimen/onefive_dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="4">
+                    android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/iv_user_img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_tech_img"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:layout_marginBottom="@dimen/ten_dp"
                         android:src="@mipmap/user_img"/>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center">
@@ -48,7 +48,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/status"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:textColor="@color/blackColor"
                             android:singleLine="true" />
@@ -57,8 +57,8 @@
                             android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Closed"
-                            android:textSize="15sp"
+                            android:text="Status"
+                            android:textSize="14sp"
                             android:gravity="center_vertical"
                             android:textColor="@color/forgotPassColor"
                             android:singleLine="true" />
@@ -68,20 +68,18 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:layout_weight="6"
-                    android:layout_marginTop="@dimen/ten_dp"
                     android:layout_marginLeft="@dimen/ten_dp"
                     android:layout_marginRight="@dimen/ten_dp">
 
                     <TextView
                         android:id="@+id/tv_user_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/user_name_text"
-                        android:textSize="19sp"
+                        android:textSize="17sp"
                         android:gravity="center_vertical"
                         android:textColor="@color/blackColor"
                         android:singleLine="true"
@@ -91,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/onefive_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
                         android:layout_marginLeft="@dimen/ten_dp">
 
                         <ImageView
@@ -108,7 +106,7 @@
                             android:layout_height="match_parent"
                             android:text="19-March-2019"
                             android:layout_marginLeft="@dimen/ten_dp"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:textColor="@color/blackColor"
                             android:gravity="center_vertical"
                             android:singleLine="true" />
@@ -119,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/onefive_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
                         android:layout_marginLeft="@dimen/ten_dp"
                         android:layout_marginRight="@dimen/ten_dp">
 
@@ -137,7 +135,7 @@
                             android:layout_height="wrap_content"
                             android:text="Carpentry"
                             android:layout_marginLeft="@dimen/ten_dp"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:gravity="center_vertical"
                             android:singleLine="true"
                             android:textColor="@color/blackColor" />
@@ -146,20 +144,22 @@
 
                     <Button
                         android:id="@+id/btn_more_details"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/twozero_dp"
+                        android:layout_marginTop="@dimen/onefive_dp"
                         android:background="@drawable/background_white"
                         android:backgroundTint="@color/logoColor"
                         android:onClick="onMoreDetailsClicked"
-                        android:layout_marginBottom="@dimen/twozero_dp"
-                        android:paddingLeft="@dimen/fourzero_dp"
-                        android:paddingRight="@dimen/fourzero_dp"
+                        android:paddingLeft="@dimen/twozero_dp"
+                        android:paddingRight="@dimen/twozero_dp"
+                        android:layout_marginLeft="@dimen/onefive_dp"
+                        android:layout_marginRight="@dimen/onefive_dp"
+                        android:layout_marginBottom="@dimen/ten_dp"
                         android:text="@string/more_details_text"
                         android:textAllCaps="false"
                         android:maxLines="1"
                         android:textColor="@color/blackColor"
-                        android:textSize="17sp" />
+                        android:textSize="13sp" />
 
                 </LinearLayout>
             </LinearLayout>

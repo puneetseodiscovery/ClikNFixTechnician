@@ -30,4 +30,9 @@ public class PEarningFragment implements IPEarningFragment {
     public void getEarningsFailureResponse(String message) {
         iEarningFragment.getEarningsFailureFromPresenter(message);
     }
+
+    @Override
+    public void noJobDoneResponse(String msgg) {
+        iEarningFragment.noJobDoneFromPresenter(msgg);
+    }
 }

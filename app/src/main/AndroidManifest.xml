@@ -21,7 +21,7 @@
             android:exported="true"></receiver>
 
         <service
-            android:name=".base.BaseFirebaseMessagingService"
+            android:name="com.cliknfix.tech.base.BaseFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

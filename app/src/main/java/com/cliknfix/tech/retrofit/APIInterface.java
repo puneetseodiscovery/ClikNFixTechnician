@@ -63,7 +63,8 @@ public interface APIInterface {
     public static final int COMPLETE_JOB_SUCCESS= 32;
     public static final int COMPLETE_JOB_FAILED= 33;
     public static final int GET_EARNINGS_SUCCESS= 34;
-    public static final int GET_EARNINGS_FAILED= 35;
+    public static final int NO_JOB_DONE_YET= 35;
+    public static final int GET_EARNINGS_FAILED= 36;
 
     @Headers({"Accept: application/json"})
     @POST("/Cliknfixx/api/technicianlogin")

@@ -57,10 +57,7 @@ import butterknife.ButterKnife;
 import static com.google.android.gms.location.LocationServices.API;
 import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
-public class LoginActivity extends BaseClass implements ILoginActivity
-        , GoogleApiClient.ConnectionCallbacks
-        , GoogleApiClient.OnConnectionFailedListener
-        , LocationListener {
+public class LoginActivity extends BaseClass implements ILoginActivity {
 
     @BindView(R.id.login_text)
     TextView tvLoginText;
@@ -81,15 +78,10 @@ public class LoginActivity extends BaseClass implements ILoginActivity
 
     Boolean passVisible = false;
 
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int LOCATION_PERMISSIONS_REQUEST = 1;
     private double currentLatitude;
     private double currentLongitude;
-
-    private static final int LOCATION_PERMISSIONS_REQUEST = 1;
-
-    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,37 +94,24 @@ public class LoginActivity extends BaseClass implements ILoginActivity
 
     private void init() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if (Utility.isNetworkConnected(this)) {
-            if (checkPermissions()) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                            LOCATION_PERMISSIONS_REQUEST);
-                }
-                fusedLocationClient.getLastLocation()
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_PERMISSIONS_REQUEST);
+        }
+        fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        // Logic to handle location object
-                        currentLatitude = location.getLatitude();
-                        currentLongitude = location.getLongitude();
-                        //Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
-                    }
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            currentLatitude = location.getLatitude();
+                            currentLongitude = location.getLongitude();
+                            Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-            }
-        } else {
-            Toast.makeText(this, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
-        }
         etEmail.setTypeface(Utility.typeFaceForText(this));
         /*etPassword.setTypeface(Utility.typeFaceForText(this));
         tvLoginText.setTypeface(Utility.typeFaceForBoldText(this));
@@ -153,187 +132,16 @@ public class LoginActivity extends BaseClass implements ILoginActivity
             }
         });
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                // The next two lines tell the new client that “this” current class will handle connection stuff
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                //fourth line adds the LocationServices API endpoint from GooglePlayServices
-                .addApi(API)
-                .build();
-
-        // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-
-        if(Utility.isNetworkConnected(this))
-            enableGPS();
-        else
-            Toast.makeText(this, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
     }
 
-    private void enableGPS() {
-        // Check GPS is enabled
-        LocationManager lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(this, "Please enable location services", Toast.LENGTH_SHORT).show();
-        } else {
-            checkPermissions();
-        }
-    }
-
-
-    private boolean checkPermissions() {
-        // Check location permission is granted - if it is, start the service, otherwise request the permission
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int permission1 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permission == PackageManager.PERMISSION_GRANTED && permission1 == PackageManager.PERMISSION_GRANTED) {
-
-            startService(new Intent(this, LoginFirebaseMessagingService.class));
-            deviceId = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_FIREBASE_TOKEN, "");
-            Log.e("Login deviceId",deviceId);
-            return true;
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                    LOCATION_PERMISSIONS_REQUEST);
-            return false;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //Now lets connect to the API
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(this.getClass().getSimpleName(), "onPause()");
-
-        //Disconnect from API onPause()
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.e("onLocationChanged","working");
-        //currentLatitude = location.getLatitude();
-        //currentLongitude = location.getLongitude();
-    }
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.e("onConnected","working");
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-            Location location = FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-            if (location == null) {
-                FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-            } else {
-                //If everything went fine lets get latitude and longitude
-                //currentLatitude = location.getLatitude();
-                //currentLongitude = location.getLongitude();
-                Log.e("Lat","" + currentLatitude);
-                Log.e("Lon","" + currentLongitude);
-                Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
-        }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
-            grantResults) {
-        if (requestCode == LOCATION_PERMISSIONS_REQUEST && grantResults.length == 2
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            // Start the service when the permission is granted
-            startService(new Intent(this, LoginFirebaseMessagingService.class));
-            deviceId = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_FIREBASE_TOKEN, "");
-        }
-    }
 
     public void onLoginClicked(View view) {
         if (Utility.isNetworkConnected(this)) {
-            if (Utility.isNetworkConnected(this)) {
-                if (checkPermissions()) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                                LOCATION_PERMISSIONS_REQUEST);
-                    }
-                    fusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    // Got last known location. In some rare situations this can be null.
-                                    if (location != null) {
-                                        // Logic to handle location object
-                                        currentLatitude = location.getLatitude();
-                                        currentLongitude = location.getLongitude();
-                                        Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-            } else {
-                Toast.makeText(this, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+            if(deviceToken == null){
+                getDeviceToken();
             }
-           if(deviceId!=null) {
+            Toast.makeText(this, "Device Token:" + deviceToken, Toast.LENGTH_SHORT).show();
+           if(deviceToken!=null) {
                 if (etEmail.getText().toString().length()>0 && etPassword.getText().toString().length()>0 ) {
                     if (Utility.validEmail(etEmail.getText().toString().trim())) {
                         progressDialog = Utility.showLoader(this);
@@ -341,7 +149,7 @@ public class LoginActivity extends BaseClass implements ILoginActivity
                                 ,etPassword.getText().toString().trim()
                                 ,currentLatitude
                                 ,currentLongitude
-                                ,deviceId);
+                                ,deviceToken);
                     } else {
                         etEmail.setError("Enter a valid email.");
                         etEmail.requestFocus();
@@ -365,7 +173,7 @@ public class LoginActivity extends BaseClass implements ILoginActivity
                     }
                 }
            } else {
-               enableGPS();
+               Toast.makeText(this, "deviceId:" + deviceToken, Toast.LENGTH_SHORT).show();
            }
         } else {
             Toast.makeText(this, "Check your internet connection !!!", Toast.LENGTH_SHORT).show();

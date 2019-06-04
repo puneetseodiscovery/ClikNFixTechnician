@@ -147,4 +147,12 @@ public class EarningFragment extends Fragment implements IEarningFragment {
         progressDialog.dismiss();
         Toast.makeText(context, ""+ message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void noJobDoneFromPresenter(String msgg) {
+        progressDialog.dismiss();
+        tvNoData.setText(msgg);
+        tvNoData.setVisibility(View.VISIBLE);
+        llEarning.setVisibility(View.GONE);
+    }
 }

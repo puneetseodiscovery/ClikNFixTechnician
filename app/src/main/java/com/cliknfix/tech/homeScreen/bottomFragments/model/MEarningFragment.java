@@ -31,6 +31,10 @@ public class MEarningFragment implements IMEarningFragment {
                     EarningsResponseModel earningsResponseModel = (EarningsResponseModel) msg.obj;
                     ipEarningFragment.getEarningsSuccessResponse(earningsResponseModel);
                     break;
+                case APIInterface.NO_JOB_DONE_YET:
+                    String msgg = (String) msg.obj;
+                    ipEarningFragment.noJobDoneResponse(msgg);
+                    break;
                 case APIInterface.GET_EARNINGS_FAILED:
                     String message = (String) msg.obj;
                     ipEarningFragment.getEarningsFailureResponse(message);

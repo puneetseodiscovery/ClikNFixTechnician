@@ -6,4 +6,5 @@ public interface IPEarningFragment {
     void getEarnings(String token);
     void getEarningsSuccessResponse(EarningsResponseModel earningsResponseModel);
     void getEarningsFailureResponse(String message);
+    void noJobDoneResponse(String msgg);
 }

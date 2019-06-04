@@ -55,6 +55,8 @@ public class RetrofitCalls {
                         int id = response.body().getData().get(0).getId();
                         Log.d("+++++++++", "++ access token++" + token);
                         Log.d("+++++++++", "++ id++" + id);
+                        Log.d("+++++++++", "++ device token ++" + response.body().getData().get(0).getDeviceToken());
+
                         new PreferenceHandler().writeString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_TOKEN, token);
                         new PreferenceHandler().writeInteger(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_USER_ID, id);
                         String mLoginToken = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_TOKEN, "");
@@ -511,6 +513,10 @@ public class RetrofitCalls {
                     if (response.body().getStatus().equals("200")) {
                         message.what = apiInterface.GET_EARNINGS_SUCCESS;
                         message.obj = response.body();
+                        mHandler.sendMessage(message);
+                    } else if (response.body().getStatus().equals("401")) {
+                        message.what = apiInterface.NO_JOB_DONE_YET;
+                        message.obj = response.body().getMessage();
                         mHandler.sendMessage(message);
                     } else {
                         message.what = apiInterface.GET_EARNINGS_FAILED;

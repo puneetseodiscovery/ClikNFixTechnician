@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.login.LoginActivity;
 import com.cliknfix.tech.util.PreferenceHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +64,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Log.e("Data","" + remoteMessage.getData().get("message"));
-        //sendNotification(remoteMessage.getData().get("message"));
+        sendNotification(remoteMessage.getData().get("message"));
     }
 
     @Override
@@ -82,14 +83,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String message){
         Log.e("sendNotification","Working");
 
-       /* NotificationCompat.BigPictureStyle style = new NotificationCompat.BigPictureStyle();
-        style.bigPicture(bitmap);
-*/
-       // Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        /*Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);*/
-        Intent intent = new Intent(getApplicationContext(), NotificationDismissedReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
         intent.putExtra("notificationId",10);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,0);
 
@@ -108,7 +102,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        /*NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.app_icon)
                 .setContentTitle("A new request is arrived")
                 .setAutoCancel(true)
@@ -121,7 +115,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(Notification.PRIORITY_MAX)
                 .addAction(R.drawable.ic_tracker, "Dismiss", pendingIntent);
 
-        notificationManager.notify(1, notificationBuilder.build());
+        notificationManager.notify(1, notificationBuilder.build());*/
 
 
     }

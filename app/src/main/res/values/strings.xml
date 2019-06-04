@@ -115,5 +115,6 @@
     <!-- CONTACT US SCREEN STRINGS -->
     <string name="write_msg" translatable="false">Please write your message.</string>
     <string name="send" translatable="false">Send</string>
+    <string name="default_notification_channel_id">NotificationChannel</string>
 
 </resources>

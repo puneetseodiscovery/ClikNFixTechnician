@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.util.Utility;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,8 +41,9 @@ public class TrackerLocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        buildNotification();
-        loginToFirebase();
+        //buildNotification();
+        //loginToFirebase();
+        requestLocationUpdates();
     }
 
     private void buildNotification() {
@@ -75,8 +77,7 @@ public class TrackerLocationService extends Service {
         // Authenticate with Firebase, and request location updates
         String email = getString(R.string.firebase_email);
         String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-            email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
         @Override
         public void onComplete(Task<AuthResult> task) {
             if (task.isSuccessful()) {
@@ -99,7 +100,7 @@ public class TrackerLocationService extends Service {
         /*int random = new Random().nextInt(75) + 100;
         Log.e(TAG,"random"+ random);*/
         //final String path = getString(R.string.firebase_path) + "/" + getString(R.string.transport_id);
-        final String path = getString(R.string.firebase_path) + "/" + customerId;
+        final String path = getString(R.string.firebase_path) + "/" + Utility.getUserId();
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
@@ -120,7 +121,11 @@ public class TrackerLocationService extends Service {
     }
 
     public int onStartCommand (Intent intent, int flags, int startId) {
-        customerId = intent.getStringExtra("customerId");
+        //customerId = intent.getStringExtra("customerId");
         return START_STICKY;
+    }
+
+    public interface Callbacks{
+        public void get(long data);
     }
 }

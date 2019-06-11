@@ -76,6 +76,7 @@
                     android:numStars="5"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/twozero_dp"
+                    android:isIndicator="true"
                     android:progressTint="@color/reviewStarColor"
                     android:rating="4.5" />
 

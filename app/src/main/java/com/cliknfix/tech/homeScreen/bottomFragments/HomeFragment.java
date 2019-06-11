@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
         setCustomFont();
 
-        tabLayout.getTabAt(0).select();
+        tabLayout.getTabAt(1).select();
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

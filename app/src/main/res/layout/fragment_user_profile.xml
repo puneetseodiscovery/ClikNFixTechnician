@@ -73,7 +73,6 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profilePic"
                         android:layout_width="@dimen/onetwozero_dp"
-                        android:onClick="onProfileImageClicked"
                         android:layout_height="@dimen/onetwozero_dp"
                         android:layout_gravity="center"
                         android:src="@mipmap/user_img"
@@ -96,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
+                android:isIndicator="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/twozero_dp"
                 android:progressTint="@color/reviewStarColor"
@@ -188,6 +188,7 @@
                     android:id="@+id/et_age"
                     android:textSize="15sp"
                     android:layout_weight="1"
+                    android:inputType="number"
                     android:textColor="@color/blackColor"
                     android:background="@android:color/transparent"
                     android:focusable="false"/>

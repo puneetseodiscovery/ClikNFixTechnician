@@ -2,6 +2,8 @@ package com.cliknfix.tech.acceptRejectJob;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.customerProfile.TrackerLocationService;
 import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.homeScreen.bottomFragments.presenter.IPUserProfileFragment;
@@ -23,6 +26,8 @@ import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 
 public class AcceptRejectJobFragment extends Fragment implements View.OnClickListener,IAcceptRejectJobFragment {
@@ -149,7 +154,6 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
         FragmentTransaction transaction = ((HomeScreenActivity) context).getSupportFragmentManager().beginTransaction();
         UpcomingCustomerProfileFragment fragment = new UpcomingCustomerProfileFragment();
         Bundle args = new Bundle();
-        args.putInt("id", acceptRejectResponseModel.getData().get(0).getId());
         args.putInt("id", acceptRejectResponseModel.getData().get(0).getId());
         args.putString("name", acceptRejectResponseModel.getData().get(0).getName());
         args.putString("email", acceptRejectResponseModel.getData().get(0).getEmail());

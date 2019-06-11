@@ -132,6 +132,20 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
             }
         });
 
+        String email = new PreferenceHandler().readREMString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_USER_EMAIL, "");
+        String password = new PreferenceHandler().readREMString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_USER_PASSWORD, "");
+        Log.e("login data:", "email:" + email + ",pass:" + password);
+        //Toast.makeText(this, "email:" + email + ",pass:" + password, Toast.LENGTH_SHORT).show();
+        if(email.length()>0 && password.length()>0){
+            etEmail.setText(email);
+            etPassword.setText(password);
+            cbRemember.setChecked(true);
+        } else {
+            etEmail.setText("");
+            etPassword.setText("");
+            cbRemember.setChecked(false);
+        }
+
     }
 
 
@@ -144,6 +158,16 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
            if(deviceToken!=null) {
                 if (etEmail.getText().toString().length()>0 && etPassword.getText().toString().length()>0 ) {
                     if (Utility.validEmail(etEmail.getText().toString().trim())) {
+                        if(cbRemember.isChecked()){
+                            new PreferenceHandler().writeREMString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_USER_EMAIL, etEmail.getText().toString());
+                            new PreferenceHandler().writeREMString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_USER_PASSWORD, etPassword.getText().toString());
+                        } else {
+                            new PreferenceHandler().clearREMSavedPrefrences(MyApp.getInstance().getApplicationContext());
+                        }
+
+                        if(deviceToken == null || deviceToken == "")
+                            getDeviceToken();
+
                         progressDialog = Utility.showLoader(this);
                         ipLoginActivity.doLogin(etEmail.getText().toString().trim().toLowerCase()
                                 ,etPassword.getText().toString().trim()

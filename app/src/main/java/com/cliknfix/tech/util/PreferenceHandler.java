@@ -7,7 +7,7 @@ public class PreferenceHandler {
 
     public static final int MODE = Context.MODE_PRIVATE;
     public static final String PREF_NAME = "APPFRAMEWORK_PREFERENCES";
-
+    public static final String REM_PREF_NAME = "REM_PREF_NAME";
     public static final String PREF_KEY_USER_VIEW_LOGIN = "PREF_KEY_USER_VIEW_LOGIN";
     public static final String PREF_KEY_USER_VIEW_LOGIN_PASSWORD = "PREF_KEY_USER_VIEW_LOGIN_PASSWORD";
     public static final String FCM_TOKEN = "FCM_TOKEN";
@@ -20,9 +20,7 @@ public class PreferenceHandler {
     public static final String PREF_KEY_TOKEN = "PREF_KEY_TOKEN";
     public static final String PREF_KEY_USER_NAME = "PREF_KEY_USER_NAME";
     public static final String PREF_KEY_USER_EMAIL = "PREF_KEY_USER_EMAIL";
-    public static final String PREF_KEY_USER_AUTHTOKEN = "PREF_KEY_USER_AUTHTOKEN";
-    public static final String PREF_KEY_IS_USER_LOGIN="PREF_IS_USER_LOGIN";
-    public static final String PREF_KEY_USER_PHONE ="PREF_KEY_USER_PHONE" ;
+    public static final String PREF_KEY_USER_PASSWORD = "PREF_KEY_USER_PASSWORD";
     public static final String PREF_KEY_LOGIN_TOKEN = "PREF_KEY_LOGIN_TOKEN";
     public static final String PREF_KEY_LOGIN_USER_ID = "PREF_KEY_LOGIN_USER_ID";
     public static final String PREF_KEY_FIREBASE_TOKEN = "PREF_KEY_FIREBASE_TOKEN";
@@ -59,12 +57,12 @@ public class PreferenceHandler {
         return getPreferences(context).getString(key, defValue);
     }
 
-    public void writeFCM_KEY(Context context, String key, String value) {
-        getFCMEditor(context).putString(key, value).commit();
+    public void writeREMString(Context context, String key, String value) {
+        getREMEditor(context).putString(key, value).commit();
     }
 
-    public String readFCM_KEY(Context context, String key, String defValue) {
-        return getFCMPREFERENCE(context).getString(key, defValue);
+    public String readREMString(Context context, String key, String defValue) {
+        return getREMPREFERENCE(context).getString(key, defValue);
     }
 
     public void writeFloat(Context context, String key, float value) {
@@ -89,14 +87,14 @@ public class PreferenceHandler {
         return getPreferences(context).edit();
     }
 
-    public SharedPreferences getFCMPREFERENCE(Context context) {
-        return context.getSharedPreferences(PREF_NAME, MODE);
+    public SharedPreferences getREMPREFERENCE(Context context) {
+        return context.getSharedPreferences(REM_PREF_NAME, MODE);
     }
     public SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(PREF_NAME, MODE);
     }
-    public SharedPreferences.Editor getFCMEditor(Context context) {
-        return getFCMPREFERENCE(context).edit();
+    public SharedPreferences.Editor getREMEditor(Context context) {
+        return getREMPREFERENCE(context).edit();
     }
 
     public void clearSavedPrefrences(Context context) {
@@ -104,6 +102,10 @@ public class PreferenceHandler {
         settings.edit().clear().apply();
     }
 
+    public void clearREMSavedPrefrences(Context context) {
+        SharedPreferences settings= context.getSharedPreferences(REM_PREF_NAME, MODE);
+        settings.edit().clear().apply();
+    }
 
 
 }

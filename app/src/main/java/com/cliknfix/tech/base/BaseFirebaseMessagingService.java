@@ -64,7 +64,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Log.e("Data","" + remoteMessage.getData().get("message"));
-        sendNotification(remoteMessage.getData().get("message"));
+        sendNotification(remoteMessage.getData().get("message"),remoteMessage.getData().get("technician_id"),remoteMessage.getData().get("user_id"),remoteMessage.getData().get("labour_rate"));
     }
 
     @Override
@@ -80,11 +80,15 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
         //sendRegistrationToServer(token);
     }
 
-    private void sendNotification(String message){
+    private void sendNotification(String message,String techId,String userId,String labour){
         Log.e("sendNotification","Working");
 
         Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
         intent.putExtra("notificationId",10);
+        intent.putExtra("technician_id",techId);
+        intent.putExtra("user_id",userId);
+        intent.putExtra("message",message);
+        intent.putExtra("labour_rate",labour);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,0);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -102,9 +106,9 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        /*NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.app_icon)
-                .setContentTitle("A new request is arrived")
+                .setContentTitle("A new job for you")
                 .setAutoCancel(true)
                 //.setSound(defaultSound)
                 .setContentText(message)
@@ -115,7 +119,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(Notification.PRIORITY_MAX)
                 .addAction(R.drawable.ic_tracker, "Dismiss", pendingIntent);
 
-        notificationManager.notify(1, notificationBuilder.build());*/
+        notificationManager.notify(1, notificationBuilder.build());
 
 
     }

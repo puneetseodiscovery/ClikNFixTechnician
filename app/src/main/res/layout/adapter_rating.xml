@@ -63,6 +63,7 @@
                             android:numStars="5"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/ten_dp"
+                            android:isIndicator="true"
                             android:progressTint="@color/reviewStarColor"
                             />
                     </LinearLayout>

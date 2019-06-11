@@ -85,9 +85,10 @@ public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity
         loadFragment(new HomeFragment());
         firebaseUsername = String.valueOf(Utility.getUserId());
         if(getIntent().getExtras()!=null) {
-            Log.e("intent data","" + getIntent().getStringExtra("message"));
-            Log.e("intent data","" + getIntent().getStringExtra("technician_id"));
-            Log.e("intent data","" + getIntent().getStringExtra("user_id"));
+            Log.e("message","" + getIntent().getStringExtra("message"));
+            Log.e("technician_id","" + getIntent().getStringExtra("technician_id"));
+            Log.e("user_id","" + getIntent().getStringExtra("user_id"));
+            Log.e("labour_rate","" + getIntent().getStringExtra("labour_rate"));
             message = getIntent().getStringExtra("message");
             technicianId = getIntent().getStringExtra("technician_id");
             userId = getIntent().getStringExtra("user_id");

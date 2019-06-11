@@ -118,7 +118,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 ivEdit.setVisibility(View.GONE);
                 ivSave.setVisibility(View.VISIBLE);
                 etUserName.setFocusableInTouchMode(true);
-                etEmail.setFocusableInTouchMode(true);
+                //etEmail.setFocusableInTouchMode(true);
                 etLabour.setFocusableInTouchMode(true);
                 etAge.setFocusableInTouchMode(true);
                 etAddress.setFocusableInTouchMode(true);
@@ -135,7 +135,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 focusedView.setFocusableInTouchMode(true);*/
                 etUserName.setFocusable(false);
                 etUserName.setFocusableInTouchMode(false);
-                etEmail.setFocusable(false);
+                //etEmail.setFocusable(false);
                 etEmail.setFocusableInTouchMode(false);
                 etLabour.setFocusable(false);
                 etLabour.setFocusableInTouchMode(false);

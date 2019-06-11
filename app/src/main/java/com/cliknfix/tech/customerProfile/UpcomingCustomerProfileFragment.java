@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,12 +40,16 @@ import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.otp.OTPFragment;
 import com.cliknfix.tech.util.AppConstants;
 import com.cliknfix.tech.util.Utility;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,7 +105,13 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
     ProgressDialog progressDialog;
     int totalUsers = 0;
     ArrayList<String> al = new ArrayList<>();
-    String lat,lng,labourRate;
+    String latitude,longitude,labourRate;
+
+    private double currentLatitude;
+    private double currentLongitude;
+
+    private FusedLocationProviderClient fusedLocationClient;
+
 
     public UpcomingCustomerProfileFragment() {
         // Required empty public constructor
@@ -136,7 +147,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         btnTrack.setTypeface(Utility.typeFaceForBoldText(getContext()));
         btnStartJob.setTypeface(Utility.typeFaceForBoldText(getContext()));
 
-        Log.e("customer userId","" + getArguments().getInt("id"));
+       /* Log.e("customer userId","" + getArguments().getInt("id"));
         Log.e("customer userId name","" + getArguments().getString("name"));
         etUserName.setText(getArguments().getString("name"));
         etEmail.setText(getArguments().getString("email"));
@@ -144,9 +155,37 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         etAge.setText(getArguments().getString("age"));
         etBldGrp.setText(getArguments().getString("blood_group"));
         etAddress.setText(getArguments().getString("address"));
-        lat = getArguments().getString("latitude");
-        lng = getArguments().getString("longitude");
-        labourRate = getArguments().getString("labour_rate");
+        latitude = getArguments().getString("latitude");
+        longitude = getArguments().getString("longitude");
+        labourRate = getArguments().getString("labour_rate");*/
+
+
+        if(Utility.isNetworkConnected(context))
+            enableGPS();
+        else
+            Toast.makeText(context, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((HomeScreenActivity)context,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_PERMISSIONS_REQUEST);
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            currentLatitude = location.getLatitude();
+                            currentLongitude = location.getLongitude();
+                            Toast.makeText(context, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         ivBack.setOnClickListener(this);
         ivMsg.setOnClickListener(this);
@@ -154,10 +193,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         btnTrack.setOnClickListener(this);
         btnStartJob.setOnClickListener(this);
 
-        if(Utility.isNetworkConnected(context))
-            enableGPS();
-        else
-            Toast.makeText(context, getResources().getString(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
+
 
         /*progressDialog = Utility.showLoader(getContext());
         ipUpcomingCustomerProfileFragment.getUserProfile(Utility.getUserId(),Utility.getToken());*/
@@ -193,15 +229,31 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
                 //startActivity(new Intent((HomeScreenActivity)context, ChatActivity.class));
                 break;
             case R.id.iv_phone:
+                String mobileNo = "123456789";
+                String uri = "tel:" + mobileNo.trim();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
                 break;
             case R.id.btn_track:
-                //Uri gmmIntentUri = Uri.parse("geo:37.7749,-122.4194");
-                Uri gmmIntentUri = Uri.parse("geo:" + lat + "," + lng);
+                /*techLat = 30.975254;
+                techLong = 76.527328;*/
+                //Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=" + latitude+ "," + longitude);
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=30.975254,76.527328");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                     startActivity(mapIntent);
                 }
+
+
+
+               /* double lat = Double.parseDouble(latitude);
+                double lon = Double.parseDouble(longitude);
+                String urii = String.format(Locale.ENGLISH, "geo:%f,%f", lat, lon);
+                Intent intentt = new Intent(Intent.ACTION_VIEW, Uri.parse(urii));
+                startActivity(intentt);*/
+
                 break;
             case R.id.btn_start_job:
                 Bundle args = new Bundle();
@@ -248,46 +300,22 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(context, "Please enable location services", Toast.LENGTH_SHORT).show();
         } else {
-            checkPermissions();
+            startTrackerService();
         }
     }
 
-    private void checkPermissions() {
-        // Check location permission is granted - if it is, start the service, otherwise request the permission
-        int permission = ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-            startTrackerService();
-        } else {
-            ActivityCompat.requestPermissions((HomeScreenActivity)context,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSIONS_REQUEST);
-        }
-    }
 
     private void startTrackerService() {
-        //context.startService(new Intent(context, TrackerLocationService.class));
+        context.startService(new Intent(context, TrackerLocationService.class));
         //finish();
         /*Intent serviceIntent = new Intent(TrackerLocationService.class.getName());
         serviceIntent.putExtra("customerId",String.valueOf(getArguments().getInt("id")));
         context.startService(serviceIntent);*/
-        String id = String.valueOf(getArguments().getInt("id"));
+        /*String id = String.valueOf(getArguments().getInt("id"));
         Log.e("starting service userId","" + id);
         Intent intent = new Intent(context,
                 TrackerLocationService.class);
-        intent.putExtra("customerId", id);
-        context.startService(intent);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
-            grantResults) {
-        if (requestCode == LOCATION_PERMISSIONS_REQUEST && grantResults.length == 1
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Start the service when the permission is granted
-            Intent serviceIntent = new Intent(TrackerLocationService.class.getName());
-            serviceIntent.putExtra("customerId", String.valueOf(getArguments().getInt("id")));
-            context.startService(serviceIntent);
-        }
+        intent.putExtra("customerId", Utility.getUserId());
+        context.startService(intent);*/
     }
 }

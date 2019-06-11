@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class SplashActivity extends BaseClass {
 
     String session;
-    String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+    String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

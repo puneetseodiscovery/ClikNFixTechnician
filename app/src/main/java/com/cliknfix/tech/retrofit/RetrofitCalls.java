@@ -22,6 +22,7 @@ import com.cliknfix.tech.responseModels.SubmitOTPResponseModel;
 import com.cliknfix.tech.responseModels.UpcomingJobsResponseModel;
 import com.cliknfix.tech.responseModels.UserProfileResponseModel;
 import com.cliknfix.tech.util.PreferenceHandler;
+import com.cliknfix.tech.util.Utility;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,8 +62,10 @@ public class RetrofitCalls {
                         new PreferenceHandler().writeInteger(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_USER_ID, id);
                         String mLoginToken = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_TOKEN, "");
                         int userId = new PreferenceHandler().readInteger(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_LOGIN_USER_ID, 0);
+                        int userId1 = Utility.getUserId();
                         Log.d("+++++++++", "++ access token read++" + mLoginToken);
                         Log.d("+++++++++", "++ id read++" + userId);
+                        Log.d("+++++++++", "++ id read++" + userId1);
                         mHandler.sendMessage(message);
                     } else {
                         message.what = apiInterface.LOGIN_FAILED;

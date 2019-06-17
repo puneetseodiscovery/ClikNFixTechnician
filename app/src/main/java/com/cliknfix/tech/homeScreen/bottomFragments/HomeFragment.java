@@ -2,7 +2,6 @@ package com.cliknfix.tech.homeScreen.bottomFragments;
 
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,8 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cliknfix.tech.R;
-import com.cliknfix.tech.homeScreen.HomeScreenActivity;
+import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.bottomFragments.adapter.HomeAdapter;
+import com.cliknfix.tech.util.AppConstants;
 import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
@@ -54,18 +54,23 @@ public class HomeFragment extends Fragment {
         return  view;
     }
 
-    private void init() {
+    public void init() {
+        Log.e("Home Fragment","working");
         tvTitle.setTypeface(Utility.typeFaceForBoldText(getContext()));
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setCustomFont();
 
-        tabLayout.getTabAt(1).select();
+        Log.e("Home Fragment viewPager","" +viewPager.getCurrentItem());
+        Log.e("Home Fragment tab","" +tabLayout.getSelectedTabPosition());
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                if(tab.getPosition() == 0)
+                    loadFragment(new UpcomingJobsFragment());
+                else
+                    loadFragment(new PastJobsFragment());
             }
 
             @Override
@@ -75,6 +80,29 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                if(i == 0)
+                    loadFragment(new UpcomingJobsFragment());
+                else
+                    loadFragment(new PastJobsFragment());
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if(i == 0)
+                    loadFragment(new UpcomingJobsFragment());
+                else
+                    loadFragment(new PastJobsFragment());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
 
             }
         });
@@ -105,6 +133,14 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public void loadFragment(Fragment fragment) {
+        // load fragment
+        //clearStack();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fl_upcoming_past, fragment);
+        transaction.commit();
     }
 
 }

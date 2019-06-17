@@ -14,6 +14,7 @@ import com.cliknfix.tech.responseModels.CustomerProfileResponseModel;
 import com.cliknfix.tech.responseModels.EarningsResponseModel;
 import com.cliknfix.tech.responseModels.ForgotPasswordResponseModel;
 import com.cliknfix.tech.responseModels.LoginResponseModel;
+import com.cliknfix.tech.responseModels.LogoutResponseModel;
 import com.cliknfix.tech.responseModels.PastJobsResponseModel;
 import com.cliknfix.tech.responseModels.PrivacyPolicyResponseModel;
 import com.cliknfix.tech.responseModels.ReviewsResponseModel;
@@ -65,7 +66,7 @@ public class RetrofitCalls {
                         int userId1 = Utility.getUserId();
                         Log.d("+++++++++", "++ access token read++" + mLoginToken);
                         Log.d("+++++++++", "++ id read++" + userId);
-                        Log.d("+++++++++", "++ id read++" + userId1);
+                        Log.d("+++++++++", "++ id read++1" + userId1);
                         mHandler.sendMessage(message);
                     } else {
                         message.what = apiInterface.LOGIN_FAILED;
@@ -536,6 +537,35 @@ public class RetrofitCalls {
                 Log.d("Error msg:" ,"" +t.getMessage());
                 mHandler.sendMessage(message);
 
+            }
+        });
+
+    }
+
+    public void doLogout(int technician_id, final Handler mHandler) {
+        final Message message = new Message();
+        Call<LogoutResponseModel> call = apiInterface.doLogout(technician_id);
+        call.enqueue(new Callback<LogoutResponseModel>() {
+            @Override
+            public void onResponse(Call<LogoutResponseModel> call, Response<LogoutResponseModel> response) {
+                if (response.body() != null) {
+                    if (response.body().getStatus().equals("200")) {
+                        message.what = apiInterface.LOGOUT_SUCCESS;
+                        message.obj = response.body();
+                        mHandler.sendMessage(message);
+                    } else {
+                        message.what = apiInterface.LOGOUT_FAILED;
+                        message.obj = response.body().getMessage();
+                        mHandler.sendMessage(message);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<LogoutResponseModel> call, Throwable t) {
+                message.what = apiInterface.LOGOUT_FAILED;
+                message.obj = t.getMessage();
+                Log.d("+++++","++ t message ++"+t.getMessage());
+                mHandler.sendMessage(message);
             }
         });
 

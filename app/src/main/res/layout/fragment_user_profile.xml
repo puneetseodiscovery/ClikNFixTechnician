@@ -78,28 +78,45 @@
                         android:src="@mipmap/user_img"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFFFFF"/>
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/cam"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                    <RelativeLayout
+                        android:id="@+id/iv_cam"
+                        android:layout_width="@dimen/fourzero_dp"
+                        android:layout_height="@dimen/fourzero_dp"
                         android:layout_gravity="bottom|right"
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="@dimen/twozero_dp"
-                        android:src="@drawable/cam"
-                        android:visibility="visible"/>
+                        android:visibility="gone">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom|right"
+                            android:src="@mipmap/cam"
+                            android:id="@+id/cam"/>
+                    </RelativeLayout>
                 </FrameLayout>
             </RelativeLayout>
 
-            <RatingBar
+            <!--<RatingBar
                 android:id="@+id/rating"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:numStars="5"
                 android:isIndicator="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/twozero_dp"
                 android:progressTint="@color/reviewStarColor"
-                android:rating="4.5" />
+                android:secondaryProgressTint="@android:color/transparent"
+                android:rating="0" />-->
+
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/CustomRatingBar"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/twozero_dp"
+                android:isIndicator="true"/>
 
 
             <LinearLayout android:layout_width="match_parent"
@@ -238,7 +255,7 @@
                 android:background="@color/edittextHintColor"/>
 
             <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/onefive_dp"
                 android:layout_marginLeft="@dimen/onefive_dp"
                 android:layout_marginRight="@dimen/onefive_dp"
@@ -251,13 +268,14 @@
                     android:textSize="15sp"
                     android:layout_weight="1"/>
 
-                <EditText android:layout_height="wrap_content"
+                <TextView android:layout_height="wrap_content"
                     android:layout_width="0dp"
                     android:text="#123 Main Stanytown, USA"
                     android:id="@+id/et_address"
                     android:textSize="15sp"
                     android:layout_weight="1"
                     android:textColor="@color/blackColor"
+                    android:padding="@dimen/five_dp"
                     android:background="@android:color/transparent"
                     android:focusable="false"/>
 

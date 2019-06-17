@@ -1,19 +1,11 @@
 package com.cliknfix.tech.login;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -40,11 +32,7 @@ import com.cliknfix.tech.responseModels.LoginResponseModel;
 import com.cliknfix.tech.util.PreferenceHandler;
 import com.cliknfix.tech.util.Utility;
 import com.firebase.client.Firebase;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -53,9 +41,6 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.google.android.gms.location.LocationServices.API;
-import static com.google.android.gms.location.LocationServices.FusedLocationApi;
 
 public class LoginActivity extends BaseClass implements ILoginActivity {
 
@@ -108,7 +93,7 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
                             // Logic to handle location object
                             currentLatitude = location.getLatitude();
                             currentLongitude = location.getLongitude();
-                            Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -154,7 +139,7 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
             if(deviceToken == null){
                 getDeviceToken();
             }
-            Toast.makeText(this, "Device Token:" + deviceToken, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Device Token:" + deviceToken, Toast.LENGTH_SHORT).show();
            if(deviceToken!=null) {
                 if (etEmail.getText().toString().length()>0 && etPassword.getText().toString().length()>0 ) {
                     if (Utility.validEmail(etEmail.getText().toString().trim())) {
@@ -197,7 +182,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
                     }
                 }
            } else {
-               Toast.makeText(this, "deviceId:" + deviceToken, Toast.LENGTH_SHORT).show();
+               //Toast.makeText(this, "deviceId:" + deviceToken, Toast.LENGTH_SHORT).show();
+               Log.e("deviceId:", deviceToken);
            }
         } else {
             Toast.makeText(this, "Check your internet connection !!!", Toast.LENGTH_SHORT).show();
@@ -229,7 +215,8 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
             @Override
             public void onResponse(String s) {
                 if(s.equals("null")){
-                    Toast.makeText(LoginActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(LoginActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                    Log.e("firebase login", "user not found");
                 }
                 else{
                     try {
@@ -295,9 +282,10 @@ public class LoginActivity extends BaseClass implements ILoginActivity {
 
                         if (!obj.has(userId)) {
                             reference.child(userId).child("password").setValue(password);
-                            Toast.makeText(LoginActivity.this, "registration successful", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(LoginActivity.this, "registration successful", Toast.LENGTH_LONG).show();
+                            Log.e("firebase regsiter", "registration successful");
                         } else {
-                            Log.e("firebase","username already exists");
+                            Log.e("firebase regsiter","username already exists");
                             //Toast.makeText(LoginActivity.this, "username already exists", Toast.LENGTH_LONG).show();
                         }
 

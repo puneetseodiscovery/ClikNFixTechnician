@@ -1,16 +1,19 @@
 package com.cliknfix.tech.homeScreen.bottomFragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.aboutUs.AboutUsActivity;
@@ -18,9 +21,12 @@ import com.cliknfix.tech.base.MyApp;
 import com.cliknfix.tech.changePassword.ChangePasswordActivity;
 import com.cliknfix.tech.contact.ContactUsActivity;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
+import com.cliknfix.tech.homeScreen.bottomFragments.presenter.IPSettingsFragment;
+import com.cliknfix.tech.homeScreen.bottomFragments.presenter.PSettingsFragment;
 import com.cliknfix.tech.login.LoginActivity;
 import com.cliknfix.tech.privacyPolicy.PrivacyPolicyActivity;
 import com.cliknfix.tech.ratingsReview.RatingActivity;
+import com.cliknfix.tech.responseModels.LogoutResponseModel;
 import com.cliknfix.tech.util.AppConstants;
 import com.cliknfix.tech.util.PreferenceHandler;
 import com.cliknfix.tech.util.Utility;
@@ -31,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends Fragment implements View.OnClickListener,ISettingsFragment {
 
     public static String TAG_SETTINGS_FRAGMENT = "SettingsFragment";
 
@@ -58,6 +64,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     Context context;
 
+    IPSettingsFragment ipSettingsFragment;
+    ProgressDialog progressDialog;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -70,6 +79,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this,view);
         context = getContext();
+        ipSettingsFragment = new PSettingsFragment(this);
         init();
         return view;
     }
@@ -135,10 +145,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         .setCancelable(false)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                new PreferenceHandler().clearSavedPrefrences(MyApp.getInstance().getApplicationContext());
+                                /*new PreferenceHandler().clearSavedPrefrences(MyApp.getInstance().getApplicationContext());
                                 Intent intent = new Intent(context, LoginActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                startActivity(intent);*/
+                                int userId1 = Utility.getUserId();
+                                Log.d("+++++++++", "++ id read++" + userId1);
+                                progressDialog = Utility.showLoader(context);
+                                ipSettingsFragment.doLogout(Utility.getUserId());
                                 dialog.dismiss();
                             }
                         })
@@ -154,6 +168,21 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         }
 
+    }
+
+    @Override
+    public void logoutSuccessFromPresenter(LogoutResponseModel logoutResponseModel) {
+        progressDialog.dismiss();
+        new PreferenceHandler().clearSavedPrefrences(MyApp.getInstance().getApplicationContext());
+        Intent intent = new Intent(context,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void logoutFailureFromPresenter(String message) {
+        progressDialog.dismiss();
+        Toast.makeText(context, ""+message, Toast.LENGTH_SHORT).show();
     }
 
   /*  public void loadFragment(Fragment fragment){

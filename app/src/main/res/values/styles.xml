@@ -24,4 +24,9 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorAccent">@color/reviewStarColor</item>
+        <item name="android:colorControlNormal">#cfcfcf</item>
+    </style>
+
 </resources>

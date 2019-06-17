@@ -73,13 +73,10 @@
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
+                    android:theme="@style/CustomRatingBar"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/twozero_dp"
                     android:isIndicator="true"
-                    android:progressTint="@color/reviewStarColor"
-                    android:rating="4.5" />
-
+                    android:layout_marginTop="@dimen/twozero_dp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_ratings"

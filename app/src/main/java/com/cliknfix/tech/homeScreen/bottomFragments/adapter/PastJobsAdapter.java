@@ -1,7 +1,6 @@
 package com.cliknfix.tech.homeScreen.bottomFragments.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +15,9 @@ import android.widget.TextView;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.customerProfile.PastCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
-import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanPastJobs;
 import com.cliknfix.tech.responseModels.PastJobsResponseModel;
 import com.cliknfix.tech.util.Utility;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

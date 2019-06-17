@@ -2,8 +2,6 @@ package com.cliknfix.tech.acceptRejectJob;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,17 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cliknfix.tech.R;
-import com.cliknfix.tech.customerProfile.TrackerLocationService;
 import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
-import com.cliknfix.tech.homeScreen.bottomFragments.presenter.IPUserProfileFragment;
 import com.cliknfix.tech.responseModels.AcceptRejectResponseModel;
 import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 
 public class AcceptRejectJobFragment extends Fragment implements View.OnClickListener,IAcceptRejectJobFragment {
@@ -52,7 +46,7 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
     Button btnReject;
 
     Context context;
-    String message,userId,labourRate;
+    String message,userId,labourRate,userPhone;
     IPAcceptRejectJobFragment ipAcceptRejectJobFragment;
     ProgressDialog progressDialog;
 
@@ -114,6 +108,7 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
             message = getArguments().getString("user_query");
             userId = getArguments().getString("user_id");
             labourRate = getArguments().getString("labour_rate");
+            userPhone = getArguments().getString("user_phone");
         }
     }
 
@@ -164,6 +159,7 @@ public class AcceptRejectJobFragment extends Fragment implements View.OnClickLis
         args.putString("latitude", acceptRejectResponseModel.getData().get(0).getLat());
         args.putString("longitude", acceptRejectResponseModel.getData().get(0).getLng());
         args.putString("labour_rate", labourRate);
+        args.putString("user_phone", userPhone);
         fragment.setArguments(args);
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);

@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cliknfix.tech.R;
-import com.cliknfix.tech.acceptRejectJob.AcceptRejectJobFragment;
 import com.cliknfix.tech.base.BaseClass;
 import com.cliknfix.tech.customerProfile.PastCustomerProfileFragment;
 import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
@@ -34,12 +33,13 @@ public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
     int defaultTab=0;
-    String message,technicianId,userId,labourRate;
+    String message,technicianId,userId,labourRate,phone;
     boolean doubleBackToExitPressedOnce = false;
     ProgressDialog progressDialog;
     IPHomeScreenActivity ipHomeScreenActivity;
     boolean isUpcomingCustomer;
     String category,createdAt,servicePrice;
+    String upcomingCustomer;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -73,14 +73,19 @@ public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity
         ipHomeScreenActivity = new PHomeScreenActivity(this);
         defaultTab = getIntent().getIntExtra("DefaultTab",0);
         init();
-        if(defaultTab == 1 || AppConstants.USER_PROFILE_FROM_SETTINGS) {
-            navigation.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-            loadFragment(new SettingsFragment());
-        }
+
     }
 
     private void init() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        if(defaultTab == 1 || AppConstants.USER_PROFILE_FROM_SETTINGS) {
+            navigation.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+            loadFragment(new SettingsFragment());
+            return;
+        } else if(getIntent().getStringExtra("upcomingCustomerDetail") != null){
+            loadFragment(new UpcomingCustomerProfileFragment());
+        }
 
         loadFragment(new HomeFragment());
         firebaseUsername = String.valueOf(Utility.getUserId());
@@ -89,12 +94,18 @@ public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity
             Log.e("technician_id","" + getIntent().getStringExtra("technician_id"));
             Log.e("user_id","" + getIntent().getStringExtra("user_id"));
             Log.e("labour_rate","" + getIntent().getStringExtra("labour_rate"));
+            Log.e("user_phone","" + getIntent().getStringExtra("user_phone"));
             message = getIntent().getStringExtra("message");
             technicianId = getIntent().getStringExtra("technician_id");
             userId = getIntent().getStringExtra("user_id");
             labourRate = getIntent().getStringExtra("labour_rate");
+            phone = getIntent().getStringExtra("user_phone");
             Log.e("Homescreen userId","" + userId);
+
+
         }
+
+
     }
 
     public BeanNotification getIntentData() {
@@ -103,12 +114,13 @@ public class HomeScreenActivity extends BaseClass implements IHomeScreenActivity
         beanNotification.setMessage(message);
         beanNotification.setUserId(userId);
         beanNotification.setLabourRate(labourRate);
+        beanNotification.setPhone(phone);
         return beanNotification;
     }
 
     public void loadFragment(Fragment fragment) {
         // load fragment
-        clearStack();
+        //clearStack();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         if(AppConstants.USER_PROFILE_FROM_SETTINGS)

@@ -9,6 +9,7 @@ import com.cliknfix.tech.responseModels.CustomerProfileResponseModel;
 import com.cliknfix.tech.responseModels.EarningsResponseModel;
 import com.cliknfix.tech.responseModels.ForgotPasswordResponseModel;
 import com.cliknfix.tech.responseModels.LoginResponseModel;
+import com.cliknfix.tech.responseModels.LogoutResponseModel;
 import com.cliknfix.tech.responseModels.PastJobsResponseModel;
 import com.cliknfix.tech.responseModels.PrivacyPolicyResponseModel;
 import com.cliknfix.tech.responseModels.ReviewsResponseModel;
@@ -65,6 +66,8 @@ public interface APIInterface {
     public static final int GET_EARNINGS_SUCCESS= 34;
     public static final int NO_JOB_DONE_YET= 35;
     public static final int GET_EARNINGS_FAILED= 36;
+    public static final int LOGOUT_SUCCESS = 37;
+    public static final int LOGOUT_FAILED = 38;
 
     @Headers({"Accept: application/json"})
     @POST("/Cliknfixx/api/technicianlogin")
@@ -153,7 +156,7 @@ public interface APIInterface {
     @GET("/Cliknfixx/api/totalEarning")
     Call<EarningsResponseModel> getEarnings(@Header("token") String token);
 
-    //Call<ForgotPasswordResponseModel> forgotPass(String email);
-
-    //Call<ChangePasswordResponseModel> changePassword(String current_password, String your_password, String confirm_password, String token);
+    @Headers({"Accept: application/json"})
+    @POST("/Cliknfixx/api/logoutTechnician")
+    Call<LogoutResponseModel> doLogout(@Query("technician_id") int technician_id);
 }

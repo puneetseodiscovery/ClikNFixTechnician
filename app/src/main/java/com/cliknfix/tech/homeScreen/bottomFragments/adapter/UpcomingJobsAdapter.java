@@ -16,12 +16,9 @@ import android.widget.TextView;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.acceptRejectJob.AcceptRejectJobFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
-import com.cliknfix.tech.homeScreen.bottomFragments.UpcomingJobsFragment;
-import com.cliknfix.tech.homeScreen.bottomFragments.model.BeanUpcomingJobs;
 import com.cliknfix.tech.responseModels.UpcomingJobsResponseModel;
 import com.cliknfix.tech.util.Utility;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

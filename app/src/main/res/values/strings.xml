@@ -117,4 +117,6 @@
     <string name="send" translatable="false">Send</string>
     <string name="default_notification_channel_id">NotificationChannel</string>
 
+
+    <string name="map_api2">AIzaSyDKpkPtlJLZC0KR-p-cvb4QXG_5JtXFL40</string>
 </resources>

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,12 +32,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.base.BaseClass;
+import com.cliknfix.tech.base.MyApp;
 import com.cliknfix.tech.chat.ChatActivity;
+import com.cliknfix.tech.completeJob.CompleteJobActivity;
 import com.cliknfix.tech.customerProfile.presenter.IPUpcomingCustomerProfileFragment;
 import com.cliknfix.tech.customerProfile.presenter.PUpcomingCustomerProfileFragment;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.cliknfix.tech.otp.OTPFragment;
-import com.cliknfix.tech.util.AppConstants;
+import com.cliknfix.tech.util.PreferenceHandler;
 import com.cliknfix.tech.util.Utility;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -49,7 +50,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,7 +105,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
     ProgressDialog progressDialog;
     int totalUsers = 0;
     ArrayList<String> al = new ArrayList<>();
-    String latitude,longitude,labourRate;
+    String latitude,longitude,labourRate,userPhone;
 
     private double currentLatitude;
     private double currentLongitude;
@@ -147,7 +147,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         btnTrack.setTypeface(Utility.typeFaceForBoldText(getContext()));
         btnStartJob.setTypeface(Utility.typeFaceForBoldText(getContext()));
 
-       /* Log.e("customer userId","" + getArguments().getInt("id"));
+        Log.e("customer userId","" + getArguments().getInt("id"));
         Log.e("customer userId name","" + getArguments().getString("name"));
         etUserName.setText(getArguments().getString("name"));
         etEmail.setText(getArguments().getString("email"));
@@ -157,7 +157,8 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
         etAddress.setText(getArguments().getString("address"));
         latitude = getArguments().getString("latitude");
         longitude = getArguments().getString("longitude");
-        labourRate = getArguments().getString("labour_rate");*/
+        labourRate = getArguments().getString("labour_rate");
+        userPhone = getArguments().getString("user_phone");
 
 
         if(Utility.isNetworkConnected(context))
@@ -182,7 +183,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
                             // Logic to handle location object
                             currentLatitude = location.getLatitude();
                             currentLongitude = location.getLongitude();
-                            Toast.makeText(context, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, currentLatitude + "WORKS" + currentLongitude, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -212,7 +213,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
                         Log.e("chat response","" + s);
                         doOnSuccess(s);
                         BaseClass.firebaseChatWith = String.valueOf(getArguments().getInt("id"));//String.valueOf(getArguments().getInt("id"));
-                        startActivity(new Intent(context, ChatActivity.class));
+                        startActivity(new Intent(context, ChatActivity.class).putExtra("upcomingCustomerName",getArguments().getString("name")));
                     }
                 },new Response.ErrorListener(){
                     @Override
@@ -229,7 +230,7 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
                 //startActivity(new Intent((HomeScreenActivity)context, ChatActivity.class));
                 break;
             case R.id.iv_phone:
-                String mobileNo = "123456789";
+                String mobileNo = userPhone;
                 String uri = "tel:" + mobileNo.trim();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse(uri));
@@ -238,8 +239,8 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
             case R.id.btn_track:
                 /*techLat = 30.975254;
                 techLong = 76.527328;*/
-                //Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=" + latitude+ "," + longitude);
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=30.975254,76.527328");
+                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=" + latitude+ "," + longitude);
+               // Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=" + currentLatitude + "," +currentLongitude + "&daddr=30.975254,76.527328");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -256,14 +257,21 @@ public class UpcomingCustomerProfileFragment extends Fragment implements View.On
 
                 break;
             case R.id.btn_start_job:
-                Bundle args = new Bundle();
-                args.putString("labour_rate", labourRate);
-                FragmentTransaction transaction = ((HomeScreenActivity)context).getSupportFragmentManager().beginTransaction();
-                OTPFragment fragment = new OTPFragment();
-                transaction.replace(R.id.frame_container, fragment);
-                fragment.setArguments(args);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                boolean b = new PreferenceHandler().readStartJobBoolean(MyApp.getInstance().getApplicationContext(), PreferenceHandler.START_JOB_LABOUR, false);
+                if(b){
+                    Intent i = new Intent(context, CompleteJobActivity.class);
+                    i.putExtra("labour_rate",labourRate);
+                    startActivity(i);
+                } else {
+                    Bundle args = new Bundle();
+                    args.putString("labour_rate", labourRate);
+                    FragmentTransaction transaction = ((HomeScreenActivity)context).getSupportFragmentManager().beginTransaction();
+                    OTPFragment fragment = new OTPFragment();
+                    transaction.replace(R.id.frame_container, fragment);
+                    fragment.setArguments(args);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
                 //startActivity(new Intent((HomeScreenActivity)context, CompleteJobActivity.class));
                 break;
             case R.id.iv_back:

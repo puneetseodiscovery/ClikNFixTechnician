@@ -79,6 +79,13 @@
                 android:layout_marginTop="@dimen/ten_dp">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rs."
+                    android:textColor="@color/forgotPassColor"
+                    android:textSize="17sp" />
+
+                <TextView
                     android:id="@+id/tv_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,12 +93,6 @@
                     android:textColor="@color/forgotPassColor"
                     android:textSize="17sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rs."
-                    android:textColor="@color/forgotPassColor"
-                    android:textSize="17sp" />
 
             </LinearLayout>
 

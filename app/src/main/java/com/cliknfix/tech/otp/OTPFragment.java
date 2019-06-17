@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cliknfix.tech.R;
+import com.cliknfix.tech.base.MyApp;
 import com.cliknfix.tech.completeJob.CompleteJobActivity;
 import com.cliknfix.tech.responseModels.SubmitOTPResponseModel;
+import com.cliknfix.tech.util.PreferenceHandler;
 import com.cliknfix.tech.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.KeyEvent.KEYCODE_DEL;
 
 
 public class OTPFragment extends Fragment implements IOTPFragment {
@@ -112,20 +118,20 @@ public class OTPFragment extends Fragment implements IOTPFragment {
         btnStartJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etOTP1.getText().toString().length()>0 && etOTP2.getText().toString().length()>0
-                && etOTP3.getText().toString().length()>0 && etOTP4.getText().toString().length()>0 ) {
-                    String otp = etOTP1.getText().toString() + etOTP2.getText().toString() +
-                            etOTP3.getText().toString() + etOTP4.getText().toString();
-                        progressDialog = Utility.showLoader(context);
-                        ipotpFragment.submitOTP(otp,Utility.getToken());
-                } else {
-                    if (etOTP1.getText().toString().length()==0 || etOTP2.getText().toString().length()==0
-                        || etOTP3.getText().toString().length()==0 || etOTP4.getText().toString().length()==0)
-                    {
-                        etOTP1.setError("Enter OTP.");
-                        etOTP1.requestFocus();
-                    }
+            if (etOTP1.getText().toString().length()>0 && etOTP2.getText().toString().length()>0
+            && etOTP3.getText().toString().length()>0 && etOTP4.getText().toString().length()>0 ) {
+                String otp = etOTP1.getText().toString() + etOTP2.getText().toString() +
+                        etOTP3.getText().toString() + etOTP4.getText().toString();
+                    progressDialog = Utility.showLoader(context);
+                    ipotpFragment.submitOTP(otp,Utility.getToken());
+            } else {
+                if (etOTP1.getText().toString().length()==0 || etOTP2.getText().toString().length()==0
+                    || etOTP3.getText().toString().length()==0 || etOTP4.getText().toString().length()==0)
+                {
+                    etOTP1.setError("Enter OTP.");
+                    etOTP1.requestFocus();
                 }
+            }
             }
         });
 
@@ -210,11 +216,53 @@ public class OTPFragment extends Fragment implements IOTPFragment {
 
             }
         });
+
+        etOTP4.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent evnet) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if(keyCode == KEYCODE_DEL) {
+                    //this is for backspace
+                    if(etOTP4.getText().toString().length() == 0)
+                        etOTP3.requestFocus();
+                }
+                return false;
+            }
+        });
+
+        etOTP3.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent evnet) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if(keyCode == KEYCODE_DEL) {
+                    //this is for backspace
+                    if(etOTP3.getText().toString().length() == 0)
+                        etOTP2.requestFocus();
+                }
+                return false;
+            }
+        });
+
+        etOTP2.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent evnet) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if(keyCode == KEYCODE_DEL) {
+                    //this is for backspace
+                    if(etOTP2.getText().toString().length() == 0)
+                        etOTP1.requestFocus();
+                }
+                return false;
+            }
+        });
     }
+
+
 
     @Override
     public void onSubmitOTPSuccessFromPresenter(SubmitOTPResponseModel submitOTPResponseModel) {
         progressDialog.dismiss();
+        new PreferenceHandler().writeStartJobBoolean(MyApp.getInstance().getApplicationContext(), PreferenceHandler.START_JOB_OTP_FILL, true);
         Intent intent = new Intent(context, CompleteJobActivity.class);
         intent.putExtra("labour_rate",labourRate);
         startActivity(intent);

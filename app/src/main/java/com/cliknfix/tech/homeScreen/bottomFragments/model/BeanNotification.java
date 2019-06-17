@@ -3,8 +3,8 @@ package com.cliknfix.tech.homeScreen.bottomFragments.model;
 public class BeanNotification {
     String message;
     String userId;
-
     String labourRate;
+    String phone;
 
     public String getMessage() {
         return message;
@@ -28,5 +28,13 @@ public class BeanNotification {
 
     public void setLabourRate(String labourRate) {
         this.labourRate = labourRate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

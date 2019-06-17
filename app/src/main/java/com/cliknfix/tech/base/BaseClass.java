@@ -40,7 +40,7 @@ public class BaseClass extends AppCompatActivity{
     public void getDeviceToken() {
         startService(new Intent(this, BaseFirebaseMessagingService.class));
         deviceToken = new PreferenceHandler().readString(MyApp.getInstance().getApplicationContext(), PreferenceHandler.PREF_KEY_FIREBASE_TOKEN, "");
-        Toast.makeText(this, "Device Token:" + deviceToken, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Device Token:" + deviceToken, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -108,6 +108,7 @@ public class UpcomingJobsFragment extends Fragment implements IUpcomingJobsFragm
             args.putString("user_id", beanNotification.getUserId());
             args.putString("user_query", beanNotification.getMessage());
             args.putString("labour_rate", beanNotification.getLabourRate());
+            args.putString("user_phone", beanNotification.getPhone());
             fragment.setArguments(args);
             transaction.replace(R.id.frame_container, fragment);
             transaction.addToBackStack(null);

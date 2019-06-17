@@ -5,21 +5,15 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.homeScreen.HomeScreenActivity;
-import com.cliknfix.tech.login.LoginActivity;
 import com.cliknfix.tech.util.PreferenceHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -64,7 +58,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Log.e("Data","" + remoteMessage.getData().get("message"));
-        sendNotification(remoteMessage.getData().get("message"),remoteMessage.getData().get("technician_id"),remoteMessage.getData().get("user_id"),remoteMessage.getData().get("labour_rate"));
+        sendNotification(remoteMessage.getData().get("message"),remoteMessage.getData().get("technician_id"),remoteMessage.getData().get("user_id"),remoteMessage.getData().get("labour_rate"),remoteMessage.getData().get("user_phone"));
     }
 
     @Override
@@ -80,7 +74,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
         //sendRegistrationToServer(token);
     }
 
-    private void sendNotification(String message,String techId,String userId,String labour){
+    private void sendNotification(String message,String techId,String userId,String labour,String phone){
         Log.e("sendNotification","Working");
 
         Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
@@ -89,6 +83,7 @@ public class BaseFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("user_id",userId);
         intent.putExtra("message",message);
         intent.putExtra("labour_rate",labour);
+        intent.putExtra("user_phone",phone);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,0);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

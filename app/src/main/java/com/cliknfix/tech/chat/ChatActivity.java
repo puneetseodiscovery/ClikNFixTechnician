@@ -1,6 +1,6 @@
 package com.cliknfix.tech.chat;
 
-import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.cliknfix.tech.R;
 import com.cliknfix.tech.base.BaseClass;
-import com.cliknfix.tech.customerProfile.UpcomingCustomerProfileFragment;
+import com.cliknfix.tech.homeScreen.HomeScreenActivity;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -31,6 +31,7 @@ public class ChatActivity extends BaseClass {
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
+    String upcomingCustomerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class ChatActivity extends BaseClass {
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
 
+        upcomingCustomerName = getIntent().getStringExtra("upcomingCustomerName");
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://cliknfix-1558498832364.firebaseio.com/messages/" + firebaseUsername + "_" + firebaseChatWith);
         reference2 = new Firebase("https://cliknfix-1558498832364.firebaseio.com/messages/" + firebaseChatWith + "_" + firebaseUsername);
@@ -73,7 +75,8 @@ public class ChatActivity extends BaseClass {
                     addMessageBox("You:-\n" + message, 1);
                 }
                 else{
-                    addMessageBox(firebaseChatWith + ":-\n" + message, 2);
+                    //addMessageBox(firebaseChatWith + ":-\n" + message, 2);
+                    addMessageBox(upcomingCustomerName + ":-\n" + message, 2);
                 }
             }
 
@@ -119,11 +122,8 @@ public class ChatActivity extends BaseClass {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
     public void onBackClicked(View view) {
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        UpcomingCustomerProfileFragment fragment = new UpcomingCustomerProfileFragment();
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        Intent intent = new Intent(this, HomeScreenActivity.class);
+        intent.putExtra("upcomingCustomerDetail", 2);
+        startActivity(intent);
     }
 }
